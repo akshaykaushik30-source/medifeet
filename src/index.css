@@ -45,3 +45,13 @@
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* Fades all four edges of the shoe-story frames into the section background. */
+.story-mask {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 22%, #000 78%, transparent),
+    linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent, #000 22%, #000 78%, transparent),
+    linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent);
+  mask-composite: intersect;
+}

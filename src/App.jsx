@@ -9,12 +9,11 @@ import BottomNav from './components/BottomNav';
 import CartDrawer from './components/CartDrawer';
 import AddedToCartModal from './components/AddedToCartModal';
 // Pages load on demand so visitors only download the layout they see.
-const HomePage = lazy(() => import('./pages/HomePage'));
 const ShopPage = lazy(() => import('./pages/ShopPage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
 const DemoPage = lazy(() => import('./DemoPage'));
-const DesktopHomePage = lazy(() => import('./pages/DesktopHomePage'));
+const LandingPage = lazy(() => import('./pages/LandingPage'));
 const DesktopShopPage = lazy(() => import('./pages/DesktopShopPage'));
 const DesktopMenShopPage = lazy(() => import('./pages/DesktopMenShopPage'));
 const DesktopProductPage = lazy(() => import('./pages/DesktopProductPage'));
@@ -27,9 +26,9 @@ const ProductDetailPage = lazy(() => import('./pages/ProductDetailPage'));
 
 const PAGES = ['home', 'shop', 'men', 'product', 'about', 'contact', 'cart', 'login', 'account'];
 
-// Pages built from the Figma cart, login and dashboard frames. They share one
-// layout on every screen size; on desktop they get the shared header and footer.
-const SHARED_PAGES = { cart: CartPage, login: LoginPage, account: AccountPage };
+// Pages that share one layout on every screen size (home, plus the Figma cart,
+// login and dashboard frames); on desktop they get the shared header and footer.
+const SHARED_PAGES = { home: LandingPage, cart: CartPage, login: LoginPage, account: AccountPage };
 const MOBILE_BREAKPOINT = 768;
 
 // ?mode=mobile or ?mode=desktop forces a layout (handy for previewing); otherwise it follows screen width.
@@ -92,7 +91,6 @@ const MainAppContent = () => {
       <Suspense fallback={<div className="min-h-screen" />}>
       {viewMode === 'desktop' ? (
         <div className="w-full">
-          {currentPage === 'home' && <DesktopHomePage onNavigate={handleNavigate} />}
           {currentPage === 'shop' && <DesktopShopPage onNavigate={handleNavigate} />}
           {currentPage === 'men' && <DesktopMenShopPage onNavigate={handleNavigate} />}
           {currentPage === 'product' && !productId && <DesktopProductPage onNavigate={handleNavigate} />}
@@ -112,7 +110,6 @@ const MainAppContent = () => {
           <Header currentPage={currentPage} onNavigate={handleNavigate} />
 
           <main className="flex-1 pb-16">
-            {currentPage === 'home' && <HomePage onNavigate={handleNavigate} />}
             {(currentPage === 'shop' || currentPage === 'men') && (
               <ShopPage gender={currentPage === 'men' ? 'men' : 'women'} onNavigate={handleNavigate} />
             )}
