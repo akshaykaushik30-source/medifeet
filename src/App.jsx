@@ -10,13 +10,11 @@ import BottomNav from './components/BottomNav';
 import CartDrawer from './components/CartDrawer';
 import AddedToCartModal from './components/AddedToCartModal';
 // Pages load on demand so visitors only download the layout they see.
-const ShopPage = lazy(() => import('./pages/ShopPage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
 const DemoPage = lazy(() => import('./DemoPage'));
 const LandingPage = lazy(() => import('./pages/LandingPage'));
-const DesktopShopPage = lazy(() => import('./pages/DesktopShopPage'));
-const DesktopMenShopPage = lazy(() => import('./pages/DesktopMenShopPage'));
+const CollectionPage = lazy(() => import('./pages/CollectionPage'));
 const DesktopProductPage = lazy(() => import('./pages/DesktopProductPage'));
 const DesktopAboutPage = lazy(() => import('./pages/DesktopAboutPage'));
 const DesktopContactPage = lazy(() => import('./pages/DesktopContactPage'));
@@ -83,9 +81,12 @@ const MainAppContent = () => {
 
   // A catalogue product gets its own page; plain #product still shows the CloudWalk showcase.
   const SharedPage = SHARED_PAGES[currentPage];
-  const sharedPage = currentPage === 'product' && productId
-    ? <ProductDetailPage key={productId} productId={productId} onNavigate={handleNavigate} />
-    : SharedPage && <SharedPage onNavigate={handleNavigate} />;
+  let sharedPage = SharedPage && <SharedPage onNavigate={handleNavigate} />;
+  if (currentPage === 'product' && productId) {
+    sharedPage = <ProductDetailPage key={productId} productId={productId} onNavigate={handleNavigate} />;
+  } else if (currentPage === 'shop' || currentPage === 'men') {
+    sharedPage = <CollectionPage key={currentPage} gender={currentPage === 'men' ? 'men' : 'women'} onNavigate={handleNavigate} />;
+  }
 
   return (
     <div className="min-h-screen bg-[#FFFFFF] flex flex-col font-['Geist'] selection:bg-[#84BD3A] selection:text-[#1E3F20]">
@@ -93,8 +94,6 @@ const MainAppContent = () => {
       <Suspense fallback={<div className="min-h-screen" />}>
       {viewMode === 'desktop' ? (
         <div className="w-full">
-          {currentPage === 'shop' && <DesktopShopPage onNavigate={handleNavigate} />}
-          {currentPage === 'men' && <DesktopMenShopPage onNavigate={handleNavigate} />}
           {currentPage === 'product' && !productId && <DesktopProductPage onNavigate={handleNavigate} />}
           {currentPage === 'about' && <DesktopAboutPage onNavigate={handleNavigate} />}
           {currentPage === 'contact' && <DesktopContactPage onNavigate={handleNavigate} />}
@@ -112,9 +111,6 @@ const MainAppContent = () => {
           <Header currentPage={currentPage} onNavigate={handleNavigate} />
 
           <main className="flex-1 pb-16">
-            {(currentPage === 'shop' || currentPage === 'men') && (
-              <ShopPage gender={currentPage === 'men' ? 'men' : 'women'} onNavigate={handleNavigate} />
-            )}
             {currentPage === 'product' && !productId && (
               <DemoPage onNavigate={handleNavigate} onSwitchToOriginal={() => handleNavigate('shop')} />
             )}
