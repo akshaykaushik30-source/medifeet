@@ -1,5 +1,8 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
-import { CartProvider } from './context/CartContext';
+import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react';
+import { CartProvider, useCart } from './context/CartContext';
+import { AccountProvider } from './context/AccountContext';
+import DesktopHeader from './components/DesktopHeader';
+import DesktopFooter from './components/DesktopFooter';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import BottomNav from './components/BottomNav';
@@ -17,8 +20,15 @@ const DesktopMenShopPage = lazy(() => import('./pages/DesktopMenShopPage'));
 const DesktopProductPage = lazy(() => import('./pages/DesktopProductPage'));
 const DesktopAboutPage = lazy(() => import('./pages/DesktopAboutPage'));
 const DesktopContactPage = lazy(() => import('./pages/DesktopContactPage'));
+const CartPage = lazy(() => import('./pages/CartPage'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const AccountPage = lazy(() => import('./pages/AccountPage'));
 
-const PAGES = ['home', 'shop', 'men', 'product', 'about', 'contact'];
+const PAGES = ['home', 'shop', 'men', 'product', 'about', 'contact', 'cart', 'login', 'account'];
+
+// Pages built from the Figma cart, login and dashboard frames. They share one
+// layout on every screen size; on desktop they get the shared header and footer.
+const SHARED_PAGES = { cart: CartPage, login: LoginPage, account: AccountPage };
 const MOBILE_BREAKPOINT = 768;
 
 // ?mode=mobile or ?mode=desktop forces a layout (handy for previewing); otherwise it follows screen width.
@@ -35,6 +45,7 @@ const pageFromHash = () => {
 const MainAppContent = () => {
   const [viewMode, setViewMode] = useState(() => forcedMode() ?? modeForWidth());
   const [currentPage, setCurrentPage] = useState(pageFromHash);
+  const { setAddedItemModal, setIsCartOpen } = useCart();
 
   useEffect(() => {
     if (forcedMode()) return undefined;
@@ -50,14 +61,22 @@ const MainAppContent = () => {
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
+  // Close the bag and the "added to cart" pop-up when moving to another page.
+  useEffect(() => {
+    setAddedItemModal(null);
+    setIsCartOpen(false);
+  }, [currentPage, setAddedItemModal, setIsCartOpen]);
+
   useEffect(() => {
     if (window.location.hash !== `#${currentPage}`) window.location.hash = currentPage;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentPage]);
 
-  const handleNavigate = (pageId) => {
+  const handleNavigate = useCallback((pageId) => {
     setCurrentPage(pageId);
-  };
+  }, []);
+
+  const SharedPage = SHARED_PAGES[currentPage];
 
   return (
     <div className="min-h-screen bg-[#FFFFFF] flex flex-col font-['Geist'] selection:bg-[#84BD3A] selection:text-[#1E3F20]">
@@ -71,6 +90,13 @@ const MainAppContent = () => {
           {currentPage === 'product' && <DesktopProductPage onNavigate={handleNavigate} />}
           {currentPage === 'about' && <DesktopAboutPage onNavigate={handleNavigate} />}
           {currentPage === 'contact' && <DesktopContactPage onNavigate={handleNavigate} />}
+          {SharedPage && (
+            <>
+              <DesktopHeader currentPage={currentPage} onNavigate={handleNavigate} />
+              <SharedPage onNavigate={handleNavigate} />
+              <DesktopFooter onNavigate={handleNavigate} />
+            </>
+          )}
         </div>
       ) : (
         <div className="w-full max-w-[430px] mx-auto min-h-screen bg-[#F7F9F6] shadow-2xl border-x border-[#E8EDDF] relative flex flex-col overflow-x-clip">
@@ -86,6 +112,7 @@ const MainAppContent = () => {
             )}
             {currentPage === 'about' && <AboutPage onNavigate={handleNavigate} />}
             {currentPage === 'contact' && <ContactPage onNavigate={handleNavigate} />}
+            {SharedPage && <SharedPage onNavigate={handleNavigate} />}
           </main>
 
           <Footer onNavigate={handleNavigate} />
@@ -95,19 +122,21 @@ const MainAppContent = () => {
       </Suspense>
 
       {/* Global Slide-Over Shopping Cart Drawer */}
-      <CartDrawer onNavigateToProduct={(prodId) => handleNavigate('product')} />
+      <CartDrawer onNavigateToProduct={() => handleNavigate('product')} onViewCart={() => handleNavigate('cart')} />
 
       {/* Global "Added to Cart" Confirmation Modal (Figma Frame 308:5935) */}
-      <AddedToCartModal onNavigateToCart={() => {}} />
+      <AddedToCartModal onNavigateToCart={() => handleNavigate('cart')} />
     </div>
   );
 };
 
 export const App = () => {
   return (
-    <CartProvider>
-      <MainAppContent />
-    </CartProvider>
+    <AccountProvider>
+      <CartProvider>
+        <MainAppContent />
+      </CartProvider>
+    </AccountProvider>
   );
 };
 

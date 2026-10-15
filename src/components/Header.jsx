@@ -19,6 +19,7 @@ export const Header = ({ currentPage, onNavigate }) => {
     { id: 'product', label: 'CloudWalk' },
     { id: 'about', label: 'About' },
     { id: 'contact', label: 'Contact' },
+    { id: 'account', label: 'My Account' },
   ];
 
   return (

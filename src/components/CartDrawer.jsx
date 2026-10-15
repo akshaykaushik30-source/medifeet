@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, ShieldCheck, Tag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { FREE_SHIPPING_THRESHOLD } from '../config';
+import { FREE_SHIPPING_THRESHOLD, PROMO_CODES } from '../config';
 
-export const CartDrawer = ({ onNavigateToProduct }) => {
+export const CartDrawer = ({ onNavigateToProduct, onViewCart }) => {
   const { isCartOpen, setIsCartOpen, cartItems, cartSubtotal, updateQuantity, removeFromCart } = useCart();
   const [promoCode, setPromoCode] = useState('');
-  const [discountApplied, setDiscountApplied] = useState(false);
+  const [appliedCode, setAppliedCode] = useState(null);
+  const discountApplied = Boolean(appliedCode);
 
   if (!isCartOpen) return null;
 
@@ -15,14 +16,13 @@ export const CartDrawer = ({ onNavigateToProduct }) => {
   const progressPercent = Math.min(100, (cartSubtotal / freeShippingThreshold) * 100);
   const remainingForFreeShipping = Math.max(0, freeShippingThreshold - cartSubtotal);
 
-  const discount = discountApplied ? Math.round(cartSubtotal * 0.05) : 0;
+  const discount = appliedCode ? Math.round(cartSubtotal * PROMO_CODES[appliedCode]) : 0;
   const finalTotal = cartSubtotal - discount;
 
   const handleApplyPromo = (e) => {
     e.preventDefault();
-    if (promoCode.trim().toUpperCase() === 'NEW5') {
-      setDiscountApplied(true);
-    }
+    const code = promoCode.trim().toUpperCase();
+    if (PROMO_CODES[code]) setAppliedCode(code);
   };
 
   return (
@@ -201,7 +201,7 @@ export const CartDrawer = ({ onNavigateToProduct }) => {
 
               {discountApplied && (
                 <div className="bg-[#E8F3D6] text-[#1E3F20] text-xs px-3 py-1.5 rounded-lg mb-3 flex items-center justify-between font-semibold">
-                  <span>🎉 Coupon NEW5 Applied (5% Off)</span>
+                  <span>🎉 Coupon {appliedCode} Applied ({Math.round(PROMO_CODES[appliedCode] * 100)}% Off)</span>
                   <span>-₹{discount.toLocaleString('en-IN')}</span>
                 </div>
               )}
@@ -219,7 +219,7 @@ export const CartDrawer = ({ onNavigateToProduct }) => {
                 )}
                 <div className="flex justify-between">
                   <span>Shipping</span>
-                  <span className="font-bold text-green-700">FREE</span>
+                  <span className="font-bold text-green-700">{cartSubtotal >= freeShippingThreshold ? 'FREE' : 'At checkout'}</span>
                 </div>
                 <div className="flex justify-between text-sm font-['Outfit'] font-bold text-[#1E3F20] pt-2 border-t border-gray-100">
                   <span>Total Amount</span>
@@ -228,10 +228,13 @@ export const CartDrawer = ({ onNavigateToProduct }) => {
               </div>
 
               <button
-                onClick={() => alert(`Redirecting to Shopify Checkout for ₹${finalTotal.toLocaleString('en-IN')}!`)}
+                onClick={() => {
+                  setIsCartOpen(false);
+                  onViewCart();
+                }}
                 className="w-full bg-[#1E3F20] hover:bg-[#285424] text-white py-3.5 rounded-full font-bold text-sm tracking-wide transition shadow-md flex items-center justify-center gap-2 cursor-pointer"
               >
-                <span>Proceed to Checkout</span>
+                <span>View Cart &amp; Checkout</span>
                 <ArrowRight size={16} />
               </button>
 
