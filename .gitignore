@@ -1,0 +1,60 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Scratch & extraction scripts
+download_*.js
+download_*.cjs
+fetch_*.js
+fetch_*.cjs
+inspect_*.js
+inspect_*.cjs
+inspect_*.py
+*.py
+dump_*.cjs
+dump_*.py
+find_*.js
+find_*.cjs
+find_*.py
+get_*.cjs
+audit_*.cjs
+map_*.cjs
+scan_*.js
+query_*.js
+print_*.cjs
+
+# Temporary Figma dumps
+figma_*.json
+figma_*.png
+figma_*.txt
+sections_*.txt
+exact_specs.txt
+downloaded_*.json
+image_refs_*.json
+
+# Scratch preview slices & debug images
+scratch_*
+slice_*
+f129_downscaled.png
+scratch_edge/
