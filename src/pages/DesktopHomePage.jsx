@@ -9,6 +9,8 @@ import {
 import { useCart } from '../context/CartContext';
 import DesktopHeader from '../components/DesktopHeader';
 import FeatureStrip from '../components/FeatureStrip';
+import { AMBASSADORS } from '../data/ambassadors';
+import { useRotation } from '../hooks/useRotation';
 
 const InstagramIcon = ({ size = 16, className = "" }) => (
   <svg 
@@ -117,6 +119,8 @@ const StoryReelCard = ({ story, onOpen, hidden }) => {
 
 export const DesktopHomePage = ({ onNavigate }) => {
   const { addToCart, setIsCartOpen, cartCount, wishlist, toggleWishlist } = useCart();
+  const { index: heroIndex, setIndex: setHeroIndex, setPaused: setHeroPaused } = useRotation(AMBASSADORS.length);
+  const ambassador = AMBASSADORS[heroIndex];
 
   // ---------------------------------------------------------------------------
   // INTERACTIVE STATES
@@ -376,9 +380,15 @@ export const DesktopHomePage = ({ onNavigate }) => {
       <DesktopHeader currentPage="home" onNavigate={onNavigate} />
 
       {/* ========================================================================= */}
-      {/* 2. HERO BANNER: BOBBY DEOL AMBASSADOR SUITE (Figma Node 19:44)             */}
+      {/* 2. HERO BANNER: AMBASSADORS (Figma Node 19:44), rotating every few seconds */}
       {/* ========================================================================= */}
-      <section className="bg-[#F7F4EF] pt-12 pb-16 px-8 relative overflow-hidden border-b border-[#E8E2D8]">
+      <section
+        className="bg-[#F7F4EF] pt-12 pb-16 px-8 relative overflow-hidden border-b border-[#E8E2D8]"
+        onMouseEnter={() => setHeroPaused(true)}
+        onMouseLeave={() => setHeroPaused(false)}
+        aria-roledescription="carousel"
+        aria-label="Our ambassadors"
+      >
         <div className="max-w-[1440px] mx-auto grid grid-cols-12 gap-8 items-center relative z-10">
           
           {/* Left Column: Ambassador Kicker & Title */}
@@ -390,17 +400,19 @@ export const DesktopHomePage = ({ onNavigate }) => {
               </span>
             </div>
 
-            <h1 className="font-['Outfit'] font-black text-5xl lg:text-6xl text-[#2C5F3E] tracking-tight leading-none">
-              Bobby Deol
-            </h1>
+            <div key={ambassador.id} className="space-y-5 animate-[fadeIn_0.6s_ease]" aria-live="polite">
+              <h1 className="font-['Outfit'] font-black text-5xl lg:text-6xl text-[#2C5F3E] tracking-tight leading-none">
+                {ambassador.name}
+              </h1>
 
-            <p className="text-sm text-[#666666] leading-relaxed font-['Geist'] max-w-sm">
-              Every step tells a story. Bobby Deol's starts with Medifeet.
-            </p>
+              <p className="text-sm text-[#666666] leading-relaxed font-['Geist'] max-w-sm min-h-[2.75rem]">
+                {ambassador.tagline}
+              </p>
+            </div>
 
             <div className="pt-2">
               <button 
-                onClick={() => onNavigate('men')}
+                onClick={() => onNavigate(ambassador.shop)}
                 className="bg-[#1E3F20] hover:bg-[#285424] text-white px-8 py-4 rounded-full font-['Outfit'] font-bold text-xs uppercase tracking-wider transition-all shadow-lg hover:shadow-xl flex items-center gap-2.5 cursor-pointer active:scale-98"
               >
                 <span>Shop Now</span>
@@ -408,22 +420,36 @@ export const DesktopHomePage = ({ onNavigate }) => {
               </button>
             </div>
 
-            {/* Slider Dots */}
+            {/* Slide picker */}
             <div className="flex items-center gap-2 pt-6">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#2C5F3E]" />
-              <span className="w-2.5 h-2.5 rounded-full bg-[#2C5F3E]/40" />
-              <span className="w-2.5 h-2.5 rounded-full bg-[#2C5F3E]/40" />
+              {AMBASSADORS.map((a, i) => (
+                <button
+                  key={a.id}
+                  onClick={() => setHeroIndex(i)}
+                  aria-label={`Show ${a.name}`}
+                  aria-current={i === heroIndex || undefined}
+                  className={`h-2.5 rounded-full transition-all cursor-pointer ${
+                    i === heroIndex ? 'w-8 bg-[#2C5F3E]' : 'w-2.5 bg-[#2C5F3E]/30 hover:bg-[#2C5F3E]/60'
+                  }`}
+                />
+              ))}
             </div>
           </div>
 
           {/* Center Column: Portrait in Arch Frame */}
           <div className="col-span-12 lg:col-span-4 flex justify-center relative">
             <div className="relative w-full max-w-[380px] aspect-[4/5] rounded-t-[180px] rounded-b-3xl overflow-hidden shadow-2xl border-4 border-white bg-gradient-to-b from-[#84BD3A]/20 via-[#1E3F20]/10 to-[#1E3F20]/30 flex items-end justify-center group">
-              <img 
-                src="/assets/medifeet_home/img_0_35_104_bobby_deol_portrait.png" 
-                alt="Bobby Deol wearing MediFeet"
-                className="w-full h-full object-cover object-top select-none group-hover:scale-103 transition-transform duration-700"
-              />
+              {AMBASSADORS.map((a, i) => (
+                <img
+                  key={a.id}
+                  src={a.image}
+                  alt={i === heroIndex ? `${a.name}, MediFeet ambassador` : ''}
+                  aria-hidden={i !== heroIndex || undefined}
+                  className={`absolute inset-0 w-full h-full object-cover object-top select-none transition-opacity duration-700 ${
+                    i === heroIndex ? 'opacity-100' : 'opacity-0'
+                  }`}
+                />
+              ))}
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
             </div>
           </div>

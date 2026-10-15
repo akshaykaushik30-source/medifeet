@@ -7,8 +7,12 @@ import {
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import FeatureStrip from '../components/FeatureStrip';
+import { AMBASSADORS } from '../data/ambassadors';
+import { useRotation } from '../hooks/useRotation';
 
 export const HomePage = ({ onNavigate }) => {
+  const { index: spotIndex, setIndex: setSpotIndex } = useRotation(AMBASSADORS.length);
+  const spot = AMBASSADORS[spotIndex];
   const { addToCart } = useCart();
   const [activeCategory, setActiveCategory] = useState('All');
   const [activeSubcat, setActiveSubcat] = useState('All');
@@ -245,27 +249,41 @@ export const HomePage = ({ onNavigate }) => {
           <FeatureStrip variant="compact" />
         </section>
 
-        {/* Brand Ambassador Section: Bobby Deol */}
-        <section className="bg-white rounded-3xl p-6 sm:p-10 border border-[#E8EDDF] shadow-sm mb-12">
+        {/* Brand Ambassador Spotlight: rotates through the ambassadors */}
+        <section className="bg-white rounded-3xl p-6 sm:p-10 border border-[#E8EDDF] shadow-sm mb-12" aria-label="Our ambassadors">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             
             {/* Visual Card */}
             <div className="relative rounded-2xl overflow-hidden shadow-lg border border-[#E8EDDF] group">
-              <img
-                src="/assets/bobby-deol-card.png"
-                alt="Bobby Deol wearing MediFeet"
-                className="w-full h-[380px] object-cover group-hover:scale-102 transition-transform duration-500"
-              />
+              <div className="relative w-full h-[380px]">
+                {AMBASSADORS.map((a, i) => (
+                  <img
+                    key={a.id}
+                    src={a.image}
+                    alt={i === spotIndex ? `${a.name}, MediFeet ambassador` : ''}
+                    aria-hidden={i !== spotIndex || undefined}
+                    className={`absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-700 ${i === spotIndex ? 'opacity-100' : 'opacity-0'}`}
+                  />
+                ))}
+              </div>
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex flex-col justify-end p-6">
                 <span className="bg-[#84BD3A] text-[#1E3F20] text-[9.5px] font-['Geist_Mono'] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider w-fit mb-2">
                   BRAND AMBASSADOR
                 </span>
                 <h4 className="font-['Outfit'] font-bold text-xl text-white">
-                  Bobby Deol x MediFeet
+                  {spot.name} x MediFeet
                 </h4>
-                <p className="text-xs text-white/80">
-                  "Real comfort isn't just about soft insoles — it's about all-day stability."
-                </p>
+                <div className="flex gap-1.5 pt-3">
+                  {AMBASSADORS.map((a, i) => (
+                    <button
+                      key={a.id}
+                      onClick={() => setSpotIndex(i)}
+                      aria-label={`Show ${a.name}`}
+                      aria-current={i === spotIndex || undefined}
+                      className={`h-1.5 rounded-full transition-all cursor-pointer ${i === spotIndex ? 'w-6 bg-[#84BD3A]' : 'w-1.5 bg-white/50'}`}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -275,19 +293,19 @@ export const HomePage = ({ onNavigate }) => {
                 AMBASSADOR SPOTLIGHT
               </span>
               <h3 className="font-['Outfit'] font-bold text-2xl sm:text-3xl text-[#1E3F20] mb-4 leading-tight">
-                "Bobby Deol is here to show you that comfort can be effortless, intentional, and beautifully real."
+                {spot.tagline}
               </h3>
               <p className="text-xs sm:text-sm text-[#667360] leading-relaxed mb-6">
-                As our brand ambassador, Bobby brings a warm, authentic spirit to our mission: footwear designed around everyday comfort, thoughtful medical support, and effortless style that feels like home.
+                Our ambassadors share our mission: footwear designed around everyday comfort, thoughtful medical support, and effortless style.
               </p>
 
               <div className="flex items-center gap-3 mb-6 p-3 bg-[#F7F9F6] rounded-xl border border-[#E8EDDF]">
                 <div className="w-10 h-10 rounded-full bg-[#1E3F20] text-white flex items-center justify-center font-bold text-sm">
-                  BD
+                  {spot.name.split(' ').map((w) => w[0]).join('')}
                 </div>
                 <div>
-                  <h5 className="font-['Outfit'] font-bold text-sm text-[#1E3F20]">Bobby Deol</h5>
-                  <p className="text-[11px] text-[#667360]">Actor & Brand Ambassador</p>
+                  <h5 className="font-['Outfit'] font-bold text-sm text-[#1E3F20]">{spot.name}</h5>
+                  <p className="text-[11px] text-[#667360]">{spot.role}</p>
                 </div>
               </div>
 
