@@ -15,6 +15,12 @@ export const DesktopFooter = ({ onNavigate }) => {
   return (
     <footer className="bg-[#111111] text-white pt-16 pb-8 px-8">
       <div className="max-w-[1280px] mx-auto">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-12 mb-12 border-b border-white/10">
+          <img src="/assets/medifeet-logo-reversed.png" alt="MediFeet" className="h-12 sm:h-14 w-auto self-start" />
+          <p className="font-['Outfit'] text-lg sm:text-xl text-white/80 max-w-[30ch] sm:text-right">
+            Walk the comfort way. <span className="text-[#AFCB20]">Built for every step.</span>
+          </p>
+        </div>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-12 gap-8 pb-14 border-b border-white/10">
           {COLUMNS.map((col) => (
             <div key={col.title} className="lg:col-span-2 space-y-4">

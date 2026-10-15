@@ -116,9 +116,9 @@ const Hero = ({ onNavigate }) => {
             <h1 className="font-['Outfit'] font-normal leading-[0.8] tracking-[-0.055em] text-[25vw] lg:text-[24vw] xl:text-[22vw] 2xl:text-[360px]">
               <BigWord word="comfort" />
             </h1>
-            <span className="absolute right-[0.04em] -bottom-[1.3em] flex items-baseline gap-2 font-['Outfit']">
+            <span className="absolute right-[0.04em] -bottom-[1.5em] hidden sm:flex items-center gap-2 sm:gap-3 font-['Outfit']">
               <span className="text-sm sm:text-xl font-light text-[#6B675F]">by</span>
-              <span className="text-base sm:text-2xl lg:text-3xl font-semibold tracking-[0.06em]">MEDIFEET</span>
+              <img src="/assets/medifeet-brand-logo.png" alt="MediFeet" className="h-8 sm:h-11 lg:h-14 w-auto" />
             </span>
           </motion.div>
         </motion.div>
