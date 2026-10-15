@@ -62,6 +62,62 @@ const SectionTrustDivider = () => {
   );
 };
 
+// One reel in the community strip: poster at rest, muted preview on hover,
+// full video with sound on click.
+const StoryReelCard = ({ story, onOpen, hidden }) => {
+  const videoRef = useRef(null);
+  const preview = (play) => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (play) {
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+      video.currentTime = 0;
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      onMouseEnter={() => preview(true)}
+      onMouseLeave={() => preview(false)}
+      onFocus={() => preview(true)}
+      onBlur={() => preview(false)}
+      aria-label={`Play ${story.name}: ${story.title}`}
+      aria-hidden={hidden || undefined}
+      tabIndex={hidden ? -1 : 0}
+      className="group relative w-[260px] sm:w-[280px] aspect-[9/16] shrink-0 rounded-3xl overflow-hidden bg-[#1A3520] ring-1 ring-white/10 hover:ring-2 hover:ring-[#84BD3A] focus-visible:ring-2 focus-visible:ring-[#84BD3A] outline-none shadow-xl transition hover:-translate-y-1 cursor-pointer text-left"
+    >
+      <img src={story.image} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
+      <video
+        ref={videoRef}
+        src={story.video}
+        muted
+        loop
+        playsInline
+        preload="none"
+        className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-300"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-black/25" />
+
+      <span className="absolute top-4 left-4 bg-black/45 backdrop-blur-md text-white text-[11px] font-['Geist_Mono'] px-2.5 py-1 rounded-full">
+        {story.time}
+      </span>
+      <span className="absolute inset-0 m-auto w-14 h-14 rounded-full bg-white/90 text-[#1E3F20] flex items-center justify-center shadow-xl opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 scale-90 group-hover:scale-100 transition">
+        <Play size={22} className="fill-current ml-0.5" />
+      </span>
+
+      <div className="absolute inset-x-0 bottom-0 p-5 space-y-1.5">
+        <p className="text-[11px] font-['Geist_Mono'] text-[#84BD3A]">{story.handle}</p>
+        <p className="font-['Outfit'] font-bold text-base text-white leading-snug">{story.name}</p>
+        <p className="text-xs text-white/75 leading-relaxed line-clamp-2">{story.title}</p>
+      </div>
+    </button>
+  );
+};
+
 export const DesktopHomePage = ({ onNavigate }) => {
   const { addToCart, setIsCartOpen, cartCount, wishlist, toggleWishlist } = useCart();
 
@@ -69,15 +125,6 @@ export const DesktopHomePage = ({ onNavigate }) => {
   // INTERACTIVE STATES
   // ---------------------------------------------------------------------------
   const [toastMessage, setToastMessage] = useState(null);
-  const [activeStoryIdx, setActiveStoryIdx] = useState(0); // 0, 1, 2, 3
-  const [slideDirection, setSlideDirection] = useState(1);
-  const [isHeroVideoPlaying, setIsHeroVideoPlaying] = useState(true);
-  const [isHeroVideoMuted, setIsHeroVideoMuted] = useState(true);
-  const [heroVideoProgress, setHeroVideoProgress] = useState(0);
-  const [isAutoSlide, setIsAutoSlide] = useState(true);
-  const [isSliderHovered, setIsSliderHovered] = useState(false);
-  const [autoSlideCountdown, setAutoSlideCountdown] = useState(0);
-  const heroVideoRef = useRef(null);
 
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [activeVideoSrc, setActiveVideoSrc] = useState('/assets/video-concept.mp4');
@@ -107,64 +154,6 @@ export const DesktopHomePage = ({ onNavigate }) => {
     setActiveVideoInstagramUrl(igUrl || '');
     setIsVideoModalOpen(true);
   };
-
-  const handleTimeUpdate = () => {
-    if (heroVideoRef.current && heroVideoRef.current.duration) {
-      const prog = (heroVideoRef.current.currentTime / heroVideoRef.current.duration) * 100;
-      setHeroVideoProgress(prog);
-    }
-  };
-
-  const toggleHeroPlay = () => {
-    if (heroVideoRef.current) {
-      if (heroVideoRef.current.paused) {
-        heroVideoRef.current.play().catch(() => {});
-        setIsHeroVideoPlaying(true);
-      } else {
-        heroVideoRef.current.pause();
-        setIsHeroVideoPlaying(false);
-      }
-    }
-  };
-
-  const handleSelectStory = (targetIdx) => {
-    setSlideDirection(targetIdx > activeStoryIdx ? 1 : -1);
-    setActiveStoryIdx(targetIdx);
-    setAutoSlideCountdown(0);
-  };
-
-  // Automatic Slider Movement with pause on hover
-  useEffect(() => {
-    if (!isAutoSlide || isSliderHovered) return;
-
-    const slideDuration = 4000; // 4 seconds per slide
-    const intervalStep = 50; // update bar every 50ms
-    const stepPct = (intervalStep / slideDuration) * 100;
-
-    const timer = setInterval(() => {
-      setAutoSlideCountdown((prev) => {
-        if (prev >= 100) {
-          setSlideDirection(1);
-          setActiveStoryIdx((cur) => (cur + 1) % 5);
-          return 0;
-        }
-        return prev + stepPct;
-      });
-    }, intervalStep);
-
-    return () => clearInterval(timer);
-  }, [isAutoSlide, isSliderHovered, activeStoryIdx]);
-
-  // Restart active video when slide changes
-  useEffect(() => {
-    setAutoSlideCountdown(0);
-    if (heroVideoRef.current) {
-      heroVideoRef.current.currentTime = 0;
-      heroVideoRef.current.play().catch(() => {});
-      setIsHeroVideoPlaying(true);
-      setHeroVideoProgress(0);
-    }
-  }, [activeStoryIdx]);
 
   // ---------------------------------------------------------------------------
   // DATA MODELS MATCHING FIGMA FRAME 19:6 & 192:5 EXACTLY
@@ -512,340 +501,41 @@ export const DesktopHomePage = ({ onNavigate }) => {
           </p>
         </div>
 
-        {/* Carousel Container */}
-        {(() => {
-          const totalStories = ugcStories.length;
-          const prevCard = ugcStories[(activeStoryIdx - 1 + totalStories) % totalStories];
-          const activeCard = ugcStories[activeStoryIdx];
-          const nextCard = ugcStories[(activeStoryIdx + 1) % totalStories];
-          const nextNextCard = ugcStories[(activeStoryIdx + 2) % totalStories];
+        {/* Continuously moving reel strip; hover pauses it and previews a card */}
+        <div className="reel-strip overflow-hidden -mx-8">
+          <div className="reel-track gap-6 px-3 py-4">
+            {[...ugcStories, ...ugcStories].map((story, i) => (
+              <StoryReelCard
+                key={`${story.id}-${i}`}
+                story={story}
+                hidden={i >= ugcStories.length}
+                onOpen={() => openVideoModal(story.video, `${story.name} — ${story.model}`)}
+              />
+            ))}
+          </div>
+        </div>
 
-          return (
-            <div 
-              onMouseEnter={() => {
-                setIsSliderHovered(true);
-                if (heroVideoRef.current) {
-                  heroVideoRef.current.play().catch(() => {});
-                  setIsHeroVideoPlaying(true);
-                }
-              }}
-              onMouseLeave={() => {
-                setIsSliderHovered(false);
-              }}
-              className="max-w-[1360px] mx-auto select-none"
-            >
-              
-              {/* Automatic Sliding Progress Countdown Bar */}
-              <div className="w-full bg-white/10 h-1.5 rounded-full mb-8 overflow-hidden">
-                <div 
-                  className={`h-full transition-all duration-75 ${
-                    isSliderHovered 
-                      ? 'bg-[#84BD3A] shadow-[0_0_10px_#84BD3A]' 
-                      : 'bg-gradient-to-r from-[#84BD3A] to-[#A3E635]'
-                  }`}
-                  style={{ width: isSliderHovered ? '100%' : `${autoSlideCountdown}%` }}
-                />
-              </div>
-
-              {/* Dynamic Animated Slider Track */}
-              <div className="relative overflow-hidden">
-                <AnimatePresence mode="wait" custom={slideDirection}>
-                  <motion.div
-                    key={activeStoryIdx}
-                    custom={slideDirection}
-                    variants={{
-                      enter: (dir) => ({
-                        x: dir > 0 ? 60 : -60,
-                        opacity: 0.8,
-                        scale: 0.98
-                      }),
-                      center: {
-                        x: 0,
-                        opacity: 1,
-                        scale: 1,
-                        transition: {
-                          x: { type: "spring", stiffness: 260, damping: 26 },
-                          opacity: { duration: 0.3 }
-                        }
-                      },
-                      exit: (dir) => ({
-                        x: dir > 0 ? -60 : 60,
-                        opacity: 0.8,
-                        scale: 0.98,
-                        transition: {
-                          x: { type: "spring", stiffness: 260, damping: 26 },
-                          opacity: { duration: 0.3 }
-                        }
-                      })
-                    }}
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    className="grid grid-cols-12 gap-6 items-center"
-                  >
-                    
-                    {/* 1. Left Peek Card (Previous Story - Hover Plays Video) */}
-                    <div 
-                      onClick={() => handleSelectStory((activeStoryIdx - 1 + totalStories) % totalStories)}
-                      onMouseEnter={(e) => {
-                        const v = e.currentTarget.querySelector('video');
-                        if (v) { v.currentTime = 0; v.play().catch(() => {}); }
-                      }}
-                      onMouseLeave={(e) => {
-                        const v = e.currentTarget.querySelector('video');
-                        if (v) { v.pause(); v.currentTime = 0; }
-                      }}
-                      className="hidden lg:block col-span-2 rounded-3xl overflow-hidden aspect-[9/16] relative group cursor-pointer border border-white/10 hover:border-[#84BD3A] opacity-75 hover:opacity-100 hover:scale-102 transition-all duration-300 shadow-xl"
-                      title={`Click or hover to play: ${prevCard.name}`}
-                    >
-                      <img 
-                        src={prevCard.image} 
-                        alt={prevCard.name}
-                        className="w-full h-full object-cover group-hover:scale-106 transition duration-500 select-none"
-                      />
-                      <video
-                        src={prevCard.video}
-                        muted
-                        preload="metadata"
-                        loop
-                        playsInline
-                        className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/30 p-4 flex flex-col justify-between pointer-events-none">
-                        <div className="flex items-center justify-between">
-                          <span className="bg-black/70 text-white text-[10px] font-['Geist_Mono'] px-2 py-0.5 rounded-md backdrop-blur-md">
-                            {prevCard.time}
-                          </span>
-                        </div>
-                        <div className="space-y-1">
-                          <span className="text-[10px] font-['Geist_Mono'] text-[#84BD3A] block">{prevCard.handle}</span>
-                          <p className="text-xs font-bold text-white leading-tight line-clamp-2">{prevCard.title}</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* 2. Center Active Hero Card (LIVE PLAYING VIDEO ON HOVER / ACTIVE) */}
-                    <div 
-                      onMouseEnter={() => {
-                        if (heroVideoRef.current) {
-                          heroVideoRef.current.play().catch(() => {});
-                          setIsHeroVideoPlaying(true);
-                        }
-                      }}
-                      className="col-span-12 lg:col-span-6 bg-[#1A3520] rounded-3xl overflow-hidden aspect-square relative border-2 border-[#84BD3A] shadow-[0_0_50px_rgba(132,189,58,0.3)] group transition-all"
-                    >
-                      
-                      {/* Live Video Player */}
-                      <video 
-                        ref={heroVideoRef}
-                        key={activeCard.video}
-                        src={activeCard.video}
-                        poster={activeCard.image}
-                        autoPlay
-                        loop
-                        muted={isHeroVideoMuted}
-                        playsInline
-                        onTimeUpdate={handleTimeUpdate}
-                        onClick={toggleHeroPlay}
-                        className="w-full h-full object-cover cursor-pointer"
-                      />
-
-                      {/* Video Overlay Layer */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-black/30 p-6 sm:p-8 flex flex-col justify-between pointer-events-none">
-                        
-                        {/* Top Bar inside card */}
-                        <div className="flex items-center justify-between pointer-events-auto">
-                          <div className="flex items-center gap-2 bg-black/70 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/20">
-                            <span className="w-2 h-2 rounded-full bg-[#84BD3A] animate-pulse" />
-                            <span className="text-[11px] font-['Geist_Mono'] text-white font-bold">{activeCard.tag}</span>
-                          </div>
-
-                        </div>
-
-                        <VideoControls
-                          muted={isHeroVideoMuted}
-                          onToggleMute={() => setIsHeroVideoMuted(!isHeroVideoMuted)}
-                          onExpand={() => openVideoModal(activeCard.video, `${activeCard.name} — ${activeCard.model}`)}
-                          playing={isHeroVideoPlaying}
-                          onTogglePlay={toggleHeroPlay}
-                          position="top-6 right-6 sm:top-8 sm:right-8"
-                        />
-
-                        {/* Bottom Story Info & Live Progress Bar */}
-                        <div className="space-y-3 pointer-events-auto">
-                          
-                          {/* Live Video Progress Bar */}
-                          <div className="w-full bg-white/20 h-1.5 rounded-full overflow-hidden">
-                            <div 
-                              className="bg-[#84BD3A] h-full transition-all duration-200"
-                              style={{ width: `${heroVideoProgress}%` }}
-                            />
-                          </div>
-
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-full bg-[#84BD3A] text-[#1E3F20] font-black flex items-center justify-center font-['Outfit'] text-sm shadow-md">
-                                {activeCard.name.charAt(0)}
-                              </div>
-                              <div>
-                                <h4 className="font-['Outfit'] font-bold text-base text-white">{activeCard.name}</h4>
-                                <p className="text-[11px] font-['Geist_Mono'] text-[#84BD3A]">{activeCard.handle}</p>
-                              </div>
-                            </div>
-                            <span className="text-[11px] font-['Geist_Mono'] text-white/80 bg-black/60 px-3 py-1 rounded-full border border-white/10">
-                              {activeCard.time}
-                            </span>
-                          </div>
-
-                          <p className="text-sm font-['Outfit'] italic text-white/95 leading-relaxed">
-                            "{activeCard.quote}"
-                          </p>
-
-                          <div className="flex items-center justify-between text-[11px] font-['Geist_Mono'] text-white/70 pt-2 border-t border-white/10">
-                            <span className="truncate max-w-[260px]">{activeCard.model}</span>
-                          </div>
-
-                        </div>
-
-                      </div>
-
-                    </div>
-
-                    {/* 3. Right Preview Card (Next Story - Hover Plays Video) */}
-                    <div 
-                      onClick={() => handleSelectStory((activeStoryIdx + 1) % totalStories)}
-                      onMouseEnter={(e) => {
-                        const v = e.currentTarget.querySelector('video');
-                        if (v) { v.currentTime = 0; v.play().catch(() => {}); }
-                      }}
-                      onMouseLeave={(e) => {
-                        const v = e.currentTarget.querySelector('video');
-                        if (v) { v.pause(); v.currentTime = 0; }
-                      }}
-                      className="hidden lg:block col-span-3 rounded-3xl overflow-hidden aspect-[3/4] relative group cursor-pointer border border-white/10 hover:border-[#84BD3A] opacity-80 hover:opacity-100 hover:scale-102 transition-all duration-300 shadow-xl"
-                      title={`Click or hover to play: ${nextCard.name}`}
-                    >
-                      <img 
-                        src={nextCard.image} 
-                        alt={nextCard.name}
-                        className="w-full h-full object-cover group-hover:scale-106 transition duration-500 select-none"
-                      />
-                      <video
-                        src={nextCard.video}
-                        muted
-                        preload="metadata"
-                        loop
-                        playsInline
-                        className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/30 p-5 flex flex-col justify-between pointer-events-none">
-                        <div className="flex items-center justify-between">
-                          <span className="bg-black/70 text-white text-[10px] font-['Geist_Mono'] px-2.5 py-1 rounded-md backdrop-blur-md">
-                            {nextCard.time}
-                          </span>
-                        </div>
-                        <div className="space-y-1">
-                          <span className="text-[10px] font-['Geist_Mono'] text-[#84BD3A] block">{nextCard.handle}</span>
-                          <p className="text-xs font-bold text-white leading-snug">{nextCard.title}</p>
-                          <p className="text-[11px] text-white/70 italic line-clamp-2 font-['Geist']">"{nextCard.quote}"</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* 4. Far Right Partial Card (Upcoming Story - Hover Plays Video) */}
-                    <div 
-                      onClick={() => handleSelectStory((activeStoryIdx + 2) % totalStories)}
-                      onMouseEnter={(e) => {
-                        const v = e.currentTarget.querySelector('video');
-                        if (v) { v.currentTime = 0; v.play().catch(() => {}); }
-                      }}
-                      onMouseLeave={(e) => {
-                        const v = e.currentTarget.querySelector('video');
-                        if (v) { v.pause(); v.currentTime = 0; }
-                      }}
-                      className="hidden lg:block col-span-1 rounded-3xl overflow-hidden aspect-[1/3] relative group cursor-pointer border border-white/10 hover:border-[#84BD3A] opacity-65 hover:opacity-100 hover:scale-105 transition-all duration-300 shadow-xl"
-                      title={`Click or hover to play: ${nextNextCard.name}`}
-                    >
-                      <img 
-                        src={nextNextCard.image} 
-                        alt={nextNextCard.name}
-                        className="w-full h-full object-cover group-hover:scale-108 transition duration-500 select-none"
-                      />
-                      <video
-                        src={nextNextCard.video}
-                        muted
-                        preload="metadata"
-                        loop
-                        playsInline
-                        className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                      />
-                      <div className="absolute inset-0 bg-black/60 flex items-center justify-center p-2 text-center pointer-events-none">
-                        <span className="text-[10px] font-['Geist_Mono'] text-[#84BD3A] uppercase font-bold rotate-90 group-hover:tracking-wider transition-all">
-                          UPCOMING
-                        </span>
-                      </div>
-                    </div>
-
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-
-              {/* Carousel Arrows & Dot Navigation */}
-              <div className="flex items-center justify-center gap-5 mt-10">
-                <button 
-                  onClick={() => handleSelectStory((activeStoryIdx - 1 + totalStories) % totalStories)}
-                  className="w-12 h-12 rounded-full bg-white/10 hover:bg-[#84BD3A] hover:text-[#1E3F20] text-white flex items-center justify-center transition cursor-pointer border border-white/10 shadow-md transform hover:scale-105"
-                  aria-label="Previous story"
-                >
-                  <ArrowLeft size={20} />
-                </button>
-
-                <div className="flex items-center gap-2.5 bg-black/40 px-4 py-2 rounded-full border border-white/10 backdrop-blur-md">
-                  {ugcStories.map((_, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => handleSelectStory(idx)}
-                      className={`h-2.5 rounded-full transition-all cursor-pointer ${
-                        activeStoryIdx === idx 
-                          ? 'w-9 bg-[#84BD3A] shadow-[0_0_10px_#84BD3A]' 
-                          : 'w-2.5 bg-white/30 hover:bg-white/60'
-                      }`}
-                      aria-label={`Jump to slide ${idx + 1}`}
-                    />
-                  ))}
-                </div>
-
-                <button 
-                  onClick={() => handleSelectStory((activeStoryIdx + 1) % totalStories)}
-                  className="w-12 h-12 rounded-full bg-[#84BD3A] hover:bg-[#94cd4a] text-[#1E3F20] flex items-center justify-center transition cursor-pointer shadow-lg transform hover:scale-105"
-                  aria-label="Next story"
-                >
-                  <ArrowRight size={20} />
-                </button>
-              </div>
-
-              {/* Bottom Social Proof Strip */}
-              <div className="mt-12 pt-8 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-7 h-7 rounded-full bg-[#84BD3A] text-[#1E3F20] flex items-center justify-center">
-                    <Star size={14} className="fill-[#1E3F20]" />
-                  </div>
-                  <span className="text-xs font-['Geist_Mono'] text-[#B7C6BC]">
-                    <strong className="text-white font-bold">4.9 / 5</strong> from 2,400+ verified customer reviews
-                  </span>
-                </div>
-
-                <button 
-                  onClick={() => triggerToast('Share your story dialog opened')}
-                  className="border border-white/30 hover:border-[#84BD3A] hover:text-[#84BD3A] text-white px-5 py-2.5 rounded-full text-xs font-['Outfit'] font-bold uppercase tracking-wider transition cursor-pointer"
-                >
-                  Share Your Story
-                </button>
-              </div>
-
+        <div className="max-w-[1360px] mx-auto">
+        {/* Bottom Social Proof Strip */}
+        <div className="mt-12 pt-8 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-7 h-7 rounded-full bg-[#84BD3A] text-[#1E3F20] flex items-center justify-center">
+              <Star size={14} className="fill-[#1E3F20]" />
             </div>
-          );
-        })()}
+            <span className="text-xs font-['Geist_Mono'] text-[#B7C6BC]">
+              <strong className="text-white font-bold">4.9 / 5</strong> from 2,400+ verified customer reviews
+            </span>
+          </div>
+
+          <button 
+            onClick={() => triggerToast('Share your story dialog opened')}
+            className="border border-white/30 hover:border-[#84BD3A] hover:text-[#84BD3A] text-white px-5 py-2.5 rounded-full text-xs font-['Outfit'] font-bold uppercase tracking-wider transition cursor-pointer"
+          >
+            Share Your Story
+          </button>
+        </div>
+
+        </div>
       </section>
 
       {/* Section Dividing Trust Marquee Strip */}

@@ -14,3 +14,29 @@
 .animate-marquee:hover {
   animation-play-state: paused;
 }
+
+/* Community reels: a continuously moving strip that pauses while a card is hovered or focused. */
+@keyframes reel-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.reel-track {
+  display: flex;
+  width: max-content;
+  animation: reel-scroll 60s linear infinite;
+}
+
+.reel-strip:hover .reel-track,
+.reel-strip:focus-within .reel-track {
+  animation-play-state: paused;
+}
+
+.reel-strip {
+  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reel-track { animation: none; }
+  .reel-strip { overflow-x: auto; }
+}
