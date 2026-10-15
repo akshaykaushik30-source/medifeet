@@ -8,7 +8,6 @@ import {
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import DesktopHeader from '../components/DesktopHeader';
-import VideoControls from '../components/VideoControls';
 import FeatureStrip from '../components/FeatureStrip';
 
 const InstagramIcon = ({ size = 16, className = "" }) => (
@@ -105,9 +104,6 @@ const StoryReelCard = ({ story, onOpen, hidden }) => {
 
       <span className="absolute top-4 left-4 bg-black/45 backdrop-blur-md text-white text-[11px] font-['Geist_Mono'] px-2.5 py-1 rounded-full">
         {story.time}
-      </span>
-      <span className="absolute inset-0 m-auto w-14 h-14 rounded-full bg-white/90 text-[#1E3F20] flex items-center justify-center shadow-xl opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 scale-90 group-hover:scale-100 transition">
-        <Play size={22} className="fill-current ml-0.5" />
       </span>
 
       <div className="absolute inset-x-0 bottom-0 p-5 space-y-1.5">
