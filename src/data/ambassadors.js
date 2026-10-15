@@ -7,9 +7,9 @@ export const AMBASSADORS = [
     role: 'Actor & Brand Ambassador',
     tagline: "Every step tells a story. Bobby Deol's starts with MediFeet.",
     image: '/assets/medifeet_home/img_0_35_104_bobby_deol_portrait.png',
-    cutout: '/assets/ambassador-bobby-deol-cutout.webp',
-    // The original photo ends in a straight edge on the right; fade it out.
-    fadeRight: true,
+    cutout: '/assets/ambassador-bobby-deol-full-cutout.webp',
+    // Full-length shot: keep the feet (and his shoes) in view instead of fading out.
+    fullBody: true,
     shop: 'men',
     product: { image: '/assets/hero-shoe-men-derby.webp', label: "Men's formal shoes", from: 1100 },
   },

@@ -135,7 +135,7 @@ const Hero = ({ onNavigate }) => {
                 animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
                 exit={reduceMotion ? { opacity: 0 } : { opacity: 0, x: -30, filter: 'blur(10px)', transition: { duration: 0.5, ease: EASE } }}
                 transition={reduceMotion ? { duration: 0.3 } : { duration: 1.1, ease: EASE }}
-                className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-full w-auto max-w-none object-contain object-bottom ${a.fadeRight ? 'hero-fade-bottom-right' : 'hero-fade-bottom'}`}
+                className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-full w-auto max-w-none object-contain object-bottom ${a.fullBody ? 'pb-[2%]' : a.fadeRight ? 'hero-fade-bottom-right' : 'hero-fade-bottom'}`}
               />
             </AnimatePresence>
           </motion.div>
