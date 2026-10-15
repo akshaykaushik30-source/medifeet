@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import DesktopHeader from '../components/DesktopHeader';
+import VideoControls from '../components/VideoControls';
 
 const InstagramIcon = ({ size = 16, className = "" }) => (
   <svg 
@@ -534,47 +535,6 @@ export const DesktopHomePage = ({ onNavigate }) => {
               className="max-w-[1360px] mx-auto select-none"
             >
               
-              {/* Top Slider Status & Controls Bar */}
-              <div className="flex flex-wrap items-center justify-between gap-4 mb-4 px-2 text-xs font-['Geist_Mono']">
-                <div className="flex items-center gap-3">
-                  {isSliderHovered ? (
-                    <div className="flex items-center gap-2 bg-[#84BD3A]/20 border border-[#84BD3A]/50 px-3.5 py-1.5 rounded-full text-[#84BD3A] text-xs font-bold shadow-xs">
-                      <span className="w-2 h-2 rounded-full bg-[#84BD3A] animate-ping" />
-                      <span>❚❚ PAUSED ON HOVER · PLAYING VIDEO</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full text-white/90 text-xs">
-                      <span className="w-2 h-2 rounded-full bg-[#84BD3A] animate-pulse" />
-                      <span>● SLIDER MOVING AUTOMATICALLY (HOVER TO PAUSE & PLAY)</span>
-                    </div>
-                  )}
-                  <span className="text-white/60 hidden md:inline">
-                    STORY {activeStoryIdx + 1} OF {totalStories} · {activeCard.name}
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <button
-                    onClick={() => setIsAutoSlide(!isAutoSlide)}
-                    className={`px-3.5 py-1.5 rounded-full text-[10px] font-bold border transition cursor-pointer flex items-center gap-1.5 ${
-                      isAutoSlide 
-                        ? 'bg-[#84BD3A] text-[#1E3F20] border-[#84BD3A] shadow-xs' 
-                        : 'bg-white/5 text-white/70 border-white/10 hover:border-white/30'
-                    }`}
-                  >
-                    <span>{isAutoSlide ? '● AUTO-SLIDE ON' : '○ AUTO-SLIDE OFF'}</span>
-                  </button>
-
-                  <button
-                    onClick={() => setIsHeroVideoMuted(!isHeroVideoMuted)}
-                    className="px-3.5 py-1.5 rounded-full text-[10px] font-bold bg-white/10 hover:bg-white/20 text-white border border-white/10 transition cursor-pointer flex items-center gap-1.5"
-                  >
-                    {isHeroVideoMuted ? <VolumeX size={13} /> : <Volume2 size={13} className="text-[#84BD3A]" />}
-                    <span>{isHeroVideoMuted ? 'UNMUTE AUDIO' : 'MUTED'}</span>
-                  </button>
-                </div>
-              </div>
-
               {/* Automatic Sliding Progress Countdown Bar */}
               <div className="w-full bg-white/10 h-1.5 rounded-full mb-8 overflow-hidden">
                 <div 
@@ -656,16 +616,10 @@ export const DesktopHomePage = ({ onNavigate }) => {
                           <span className="bg-black/70 text-white text-[10px] font-['Geist_Mono'] px-2 py-0.5 rounded-md backdrop-blur-md">
                             {prevCard.time}
                           </span>
-                          <span className="text-[10px] text-[#84BD3A] font-bold bg-black/60 px-2 py-0.5 rounded-md group-hover:bg-[#84BD3A] group-hover:text-[#1E3F20] transition">
-                            ← PREV
-                          </span>
                         </div>
                         <div className="space-y-1">
                           <span className="text-[10px] font-['Geist_Mono'] text-[#84BD3A] block">{prevCard.handle}</span>
                           <p className="text-xs font-bold text-white leading-tight line-clamp-2">{prevCard.title}</p>
-                          <span className="text-[9px] text-[#84BD3A] font-['Geist_Mono'] font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                            ▶ PLAYING PREVIEW
-                          </span>
                         </div>
                       </div>
                     </div>
@@ -706,57 +660,16 @@ export const DesktopHomePage = ({ onNavigate }) => {
                             <span className="text-[11px] font-['Geist_Mono'] text-white font-bold">{activeCard.tag}</span>
                           </div>
 
-                          <div className="flex items-center gap-2">
-                            {activeCard.instagramUrl && (
-                              <a
-                                href={activeCard.instagramUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="bg-black/70 hover:bg-[#E1306C] text-white p-2 rounded-full backdrop-blur-md border border-white/20 transition cursor-pointer flex items-center justify-center group/ig"
-                                title="View on Instagram"
-                              >
-                                <InstagramIcon size={14} className="group-hover/ig:scale-110 transition-transform" />
-                              </a>
-                            )}
-                            <button 
-                              onClick={() => setIsHeroVideoMuted(!isHeroVideoMuted)}
-                              className="bg-black/70 hover:bg-black text-white p-2 rounded-full backdrop-blur-md border border-white/20 transition cursor-pointer"
-                              title={isHeroVideoMuted ? "Unmute Sound" : "Mute Sound"}
-                            >
-                              {isHeroVideoMuted ? <VolumeX size={15} /> : <Volume2 size={15} className="text-[#84BD3A]" />}
-                            </button>
-                            <button 
-                              onClick={() => openVideoModal(activeCard.video, `${activeCard.name} — ${activeCard.model}`, activeCard.instagramUrl)}
-                              className="bg-black/70 hover:bg-black text-white text-[10px] font-['Geist_Mono'] font-bold px-3 py-1.5 rounded-full backdrop-blur-md border border-white/20 transition cursor-pointer flex items-center gap-1.5"
-                            >
-                              <Maximize2 size={12} className="text-[#84BD3A]" />
-                              <span>EXPAND</span>
-                            </button>
-                          </div>
                         </div>
 
-                        {/* Floating Play/Pause indicator only shown on hover or when paused */}
-                        <div className="self-center pointer-events-auto">
-                          {!isHeroVideoPlaying ? (
-                            <button 
-                              onClick={toggleHeroPlay}
-                              className="px-4 py-2 rounded-full bg-black/80 hover:bg-[#84BD3A] text-white hover:text-[#1E3F20] border border-[#84BD3A] flex items-center gap-2 shadow-2xl transition cursor-pointer backdrop-blur-md text-xs font-['Geist_Mono'] font-bold"
-                            >
-                              <Play size={16} className="fill-current" />
-                              <span>RESUME VIDEO</span>
-                            </button>
-                          ) : (
-                            <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                              <button 
-                                onClick={toggleHeroPlay}
-                                className="px-3 py-1 rounded-full bg-black/60 hover:bg-black text-white/80 hover:text-white border border-white/20 flex items-center gap-1.5 text-[10px] font-['Geist_Mono'] cursor-pointer backdrop-blur-md"
-                              >
-                                <Pause size={12} />
-                                <span>PAUSE</span>
-                              </button>
-                            </div>
-                          )}
-                        </div>
+                        <VideoControls
+                          muted={isHeroVideoMuted}
+                          onToggleMute={() => setIsHeroVideoMuted(!isHeroVideoMuted)}
+                          onExpand={() => openVideoModal(activeCard.video, `${activeCard.name} — ${activeCard.model}`)}
+                          playing={isHeroVideoPlaying}
+                          onTogglePlay={toggleHeroPlay}
+                          position="top-6 right-6 sm:top-8 sm:right-8"
+                        />
 
                         {/* Bottom Story Info & Live Progress Bar */}
                         <div className="space-y-3 pointer-events-auto">
@@ -790,9 +703,6 @@ export const DesktopHomePage = ({ onNavigate }) => {
 
                           <div className="flex items-center justify-between text-[11px] font-['Geist_Mono'] text-white/70 pt-2 border-t border-white/10">
                             <span className="truncate max-w-[260px]">{activeCard.model}</span>
-                            <span className="text-[#84BD3A] font-bold shrink-0">
-                              {isHeroVideoPlaying ? '● PLAYING ON HOVER' : '❚❚ PAUSED'}
-                            </span>
                           </div>
 
                         </div>
@@ -833,17 +743,11 @@ export const DesktopHomePage = ({ onNavigate }) => {
                           <span className="bg-black/70 text-white text-[10px] font-['Geist_Mono'] px-2.5 py-1 rounded-md backdrop-blur-md">
                             {nextCard.time}
                           </span>
-                          <span className="text-[10px] text-[#84BD3A] font-bold bg-black/60 px-2.5 py-1 rounded-md group-hover:bg-[#84BD3A] group-hover:text-[#1E3F20] transition">
-                            NEXT →
-                          </span>
                         </div>
                         <div className="space-y-1">
                           <span className="text-[10px] font-['Geist_Mono'] text-[#84BD3A] block">{nextCard.handle}</span>
                           <p className="text-xs font-bold text-white leading-snug">{nextCard.title}</p>
                           <p className="text-[11px] text-white/70 italic line-clamp-2 font-['Geist']">"{nextCard.quote}"</p>
-                          <span className="text-[9px] text-[#84BD3A] font-['Geist_Mono'] font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                            ▶ PLAYING PREVIEW
-                          </span>
                         </div>
                       </div>
                     </div>
@@ -1190,22 +1094,12 @@ export const DesktopHomePage = ({ onNavigate }) => {
                         <span>{activeTech.badge}</span>
                       </div>
 
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => setIsTechVideoMuted(!isTechVideoMuted)}
-                          className="w-9 h-9 rounded-full bg-black/60 hover:bg-black text-white backdrop-blur-md border border-white/20 transition cursor-pointer flex items-center justify-center"
-                          title={isTechVideoMuted ? "Unmute Sound" : "Mute Sound"}
-                        >
-                          {isTechVideoMuted ? <VolumeX size={15} /> : <Volume2 size={15} className="text-[#84BD3A]" />}
-                        </button>
-                        <button
-                          onClick={() => openVideoModal(activeTech.video, `${activeTech.title} — MediFeet Comfort Technology`)}
-                          className="px-3 py-1.5 rounded-full bg-black/60 hover:bg-black text-white text-[11px] font-['Geist_Mono'] font-bold backdrop-blur-md border border-white/20 transition cursor-pointer flex items-center gap-1.5"
-                        >
-                          <Maximize2 size={12} className="text-[#84BD3A]" />
-                          <span>EXPAND</span>
-                        </button>
-                      </div>
+                      <VideoControls
+                        muted={isTechVideoMuted}
+                        onToggleMute={() => setIsTechVideoMuted(!isTechVideoMuted)}
+                        onExpand={() => openVideoModal(activeTech.video, `${activeTech.title} — MediFeet Comfort Technology`)}
+                        position="top-6 right-6"
+                      />
                     </div>
 
                     {/* Bottom Info Card matching user uploaded screenshot exactly */}
@@ -1213,9 +1107,6 @@ export const DesktopHomePage = ({ onNavigate }) => {
                       <div className="flex items-center justify-between">
                         <span className="text-[10px] font-['Geist_Mono'] text-[#84BD3A] uppercase font-bold tracking-wider">
                           {activeTech.tag}
-                        </span>
-                        <span className="text-[10px] font-['Geist_Mono'] text-white/70">
-                          {isTechVideoPlaying ? '● LIVE DEMO' : '❚❚ PAUSED'}
                         </span>
                       </div>
                       <h4 className="font-['Outfit'] font-bold text-lg sm:text-xl leading-snug">
@@ -1981,17 +1872,6 @@ export const DesktopHomePage = ({ onNavigate }) => {
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  {activeVideoInstagramUrl && (
-                    <a
-                      href={activeVideoInstagramUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#E1306C]/20 hover:bg-[#E1306C] text-white border border-[#E1306C]/50 transition cursor-pointer text-xs font-['Geist_Mono'] font-bold"
-                    >
-                      <InstagramIcon size={13} />
-                      <span>View on Instagram</span>
-                    </a>
-                  )}
                   <button 
                     onClick={() => setIsVideoMuted(!isVideoMuted)}
                     className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition cursor-pointer"

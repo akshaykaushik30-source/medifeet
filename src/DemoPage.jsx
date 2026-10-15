@@ -587,35 +587,26 @@ export const DemoPage = ({ onSwitchToOriginal, onNavigate }) => {
                     {stageMediaMode === 'video' ? (
                       <button
                         onClick={() => setIsStageMuted(!isStageMuted)}
-                        className="h-7 px-2.5 rounded-full bg-black/65 hover:bg-black/85 backdrop-blur-md text-white text-[9px] font-['Geist_Mono'] font-bold flex items-center gap-1.5 border border-white/20 shadow-md cursor-pointer transition"
+                        aria-label={isStageMuted ? 'Turn sound on' : 'Turn sound off'}
+                        className="w-9 h-9 rounded-full bg-black/35 hover:bg-black/60 backdrop-blur-md text-white ring-1 ring-white/20 flex items-center justify-center cursor-pointer transition"
                       >
-                        {isStageMuted ? <VolumeX size={11} className="text-[#84BD3A]" /> : <Volume2 size={11} className="text-[#84BD3A]" />}
-                        <span>{isStageMuted ? 'MUTED' : 'AUDIO ON'}</span>
+                        {isStageMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
                       </button>
                     ) : (
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => setStageMediaMode('video')}
-                        className="bg-black/65 hover:bg-black/85 backdrop-blur-md text-white text-[9.5px] font-['Geist_Mono'] font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5 border border-white/25 shadow-lg cursor-pointer transition"
+                        aria-label="Play video"
+                        className="w-9 h-9 rounded-full bg-black/35 hover:bg-black/60 backdrop-blur-md text-white ring-1 ring-white/20 flex items-center justify-center cursor-pointer transition"
                       >
-                        <Play size={10} fill="#84BD3A" className="text-[#84BD3A]" />
-                        <span>WATCH VIDEO</span>
+                        <Play size={14} className="fill-current ml-0.5" />
                       </motion.button>
                     )}
                   </div>
                 </>
               ) : (
-                <>
-                  <div className="absolute top-3.5 left-4 z-20 flex items-center bg-black/65 backdrop-blur-md rounded-full px-3 py-1.5 border border-white/20 shadow-lg text-white text-[9.5px] font-['Geist_Mono'] font-bold gap-1.5">
-                    <Camera size={11} className="text-[#84BD3A]" />
-                    <span>PRODUCT PHOTO</span>
-                  </div>
-                  <div className="absolute top-3.5 right-3.5 z-20 bg-black/65 backdrop-blur-md text-[#84BD3A] text-[9px] font-['Geist_Mono'] font-bold px-2.5 py-1.5 rounded-full border border-white/20 shadow-md flex items-center gap-1">
-                    <Sparkles size={10} />
-                    <span>HIGH DEFINITION</span>
-                  </div>
-                </>
+                null
               )}
 
               {/* Stage Media Render */}
@@ -1583,11 +1574,10 @@ export const DemoPage = ({ onSwitchToOriginal, onNavigate }) => {
                               videoUrl: item.videoUrl
                             });
                           }}
-                          title="Open Full Tech Video Player"
-                          className="bg-black/70 hover:bg-black/90 backdrop-blur-md text-white font-['Geist_Mono'] text-[8px] font-bold px-2 py-1 rounded-md uppercase tracking-wider shadow-xs border border-white/15 flex items-center gap-1 transition cursor-pointer"
+                          aria-label="Watch full screen"
+                          className="w-8 h-8 rounded-full bg-black/35 hover:bg-black/60 backdrop-blur-md text-white ring-1 ring-white/20 flex items-center justify-center transition cursor-pointer"
                         >
-                          <Maximize2 size={10} className="text-[#84BD3A]" />
-                          <span>EXPAND</span>
+                          <Maximize2 size={14} />
                         </button>
                       </div>
                     </div>
