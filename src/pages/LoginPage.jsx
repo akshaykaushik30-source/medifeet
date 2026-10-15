@@ -79,10 +79,10 @@ export const LoginPage = ({ onNavigate }) => {
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <button type="button" onClick={() => socialNotice('Google')} className="flex items-center justify-center gap-2.5 border border-gray-200 rounded-md py-3 font-['Outfit'] font-semibold text-sm hover:bg-gray-50 transition cursor-pointer">
+            <button type="button" onClick={() => socialNotice('Google')} className="flex items-center justify-center gap-2.5 border border-gray-200 rounded-md py-3 font-['Outfit'] font-semibold text-sm hover:bg-gray-50 transition-[color,background-color,border-color,opacity,transform] duration-150 cursor-pointer active:scale-[0.97]">
               <GoogleMark /> Google
             </button>
-            <button type="button" onClick={() => socialNotice('Facebook')} className="flex items-center justify-center gap-2.5 border border-gray-200 rounded-md py-3 font-['Outfit'] font-semibold text-sm hover:bg-gray-50 transition cursor-pointer">
+            <button type="button" onClick={() => socialNotice('Facebook')} className="flex items-center justify-center gap-2.5 border border-gray-200 rounded-md py-3 font-['Outfit'] font-semibold text-sm hover:bg-gray-50 transition-[color,background-color,border-color,opacity,transform] duration-150 cursor-pointer active:scale-[0.97]">
               <FacebookMark /> Facebook
             </button>
           </div>
@@ -153,7 +153,7 @@ export const LoginPage = ({ onNavigate }) => {
               </div>
             </div>
 
-            <button type="submit" className="w-full bg-[#1E3F20] hover:bg-[#285424] text-white font-['Outfit'] font-bold text-sm uppercase py-4 rounded-full transition cursor-pointer">
+            <button type="submit" className="w-full bg-[#1E3F20] hover:bg-[#285424] text-white font-['Outfit'] font-bold text-sm uppercase py-4 rounded-full transition-[color,background-color,border-color,opacity,transform] duration-150 cursor-pointer active:scale-[0.97]">
               {isSignUp ? 'Create Account' : 'Sign In'}
             </button>
           </form>

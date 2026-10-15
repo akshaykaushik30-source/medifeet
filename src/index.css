@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+/* Stronger curves than the CSS built-ins (Emil Kowalski's design-engineering
+   defaults): ease-out for things entering or responding to the user,
+   ease-in-out for things moving on screen. */
+@theme {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --default-transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+  --default-transition-duration: 160ms;
+}
+
 @keyframes marquee {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); }

@@ -161,9 +161,9 @@ export const ShoeStory = ({ onNavigate }) => {
           <div className="space-y-8">
             {CHAPTERS.map((c) => (
               <div key={c.kicker}>
-                <p className="font-['Geist_Mono'] text-xs font-bold uppercase tracking-[0.2em] text-[#2F6B2E] mb-1">{c.kicker}</p>
-                <h3 className="font-['Outfit'] font-bold text-2xl text-[#14301A]">{c.title}</h3>
-                <p className="text-[#3D4A3F] mt-1">{c.text}</p>
+                <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-[#5F5B53] mb-2">{c.kicker}</p>
+                <h3 className="font-['Outfit'] font-medium text-2xl tracking-[-0.02em] text-[#1A1A17]">{c.title}</h3>
+                <p className="text-[#4A463F] mt-1 leading-relaxed">{c.text}</p>
               </div>
             ))}
           </div>

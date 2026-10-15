@@ -142,7 +142,7 @@ export const Header = ({ currentPage, onNavigate }) => {
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
-              transition={{ type: "spring", damping: 28, stiffness: 300 }}
+              transition={{ type: "tween", duration: 0.42, ease: [0.32, 0.72, 0, 1] }}
               className="bg-[#F7F9F6] w-[82%] max-w-[320px] h-full shadow-2xl flex flex-col justify-between p-6"
               onClick={(e) => e.stopPropagation()}
             >

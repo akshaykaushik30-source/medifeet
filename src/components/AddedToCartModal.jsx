@@ -6,22 +6,22 @@ import { useCart } from '../context/CartContext';
 export const AddedToCartModal = ({ onNavigateToCart }) => {
   const { addedItemModal, setAddedItemModal, cartCount, cartSubtotal, setIsCartOpen } = useCart();
 
-  if (!addedItemModal) return null;
 
   return (
     <AnimatePresence>
+      {addedItemModal && (
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
+        exit={{ opacity: 0, transition: { duration: 0.2 } }}
         className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4"
         onClick={() => setAddedItemModal(null)}
       >
         <motion.div
           initial={{ y: "100%" }}
           animate={{ y: 0 }}
-          exit={{ y: "100%" }}
-          transition={{ type: "spring", damping: 28, stiffness: 350 }}
+          exit={{ y: "100%", transition: { duration: 0.24, ease: [0.32, 0.72, 0, 1] } }}
+          transition={{ type: "tween", duration: 0.42, ease: [0.32, 0.72, 0, 1] }}
           className="bg-white w-full max-w-[390px] rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl overflow-hidden relative"
           onClick={(e) => e.stopPropagation()}
         >
@@ -40,7 +40,7 @@ export const AddedToCartModal = ({ onNavigateToCart }) => {
             </div>
             <button
               onClick={() => setAddedItemModal(null)}
-              className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:text-black hover:bg-gray-200 transition cursor-pointer"
+              className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:text-black hover:bg-gray-200 transition-[color,background-color,border-color,opacity,transform] duration-150 cursor-pointer active:scale-[0.97]"
             >
               <X size={18} />
             </button>
@@ -92,13 +92,13 @@ export const AddedToCartModal = ({ onNavigateToCart }) => {
                   setIsCartOpen(true);
                 }
               }}
-              className="w-full bg-[#1E3F20] hover:bg-[#285424] text-white py-3.5 rounded-full font-bold text-sm tracking-wide transition shadow-md flex items-center justify-center cursor-pointer"
+              className="w-full bg-[#1E3F20] hover:bg-[#285424] text-white py-3.5 rounded-full font-bold text-sm tracking-wide transition-[color,background-color,border-color,opacity,transform] duration-150 shadow-md flex items-center justify-center cursor-pointer active:scale-[0.97]"
             >
               View Cart
             </button>
             <button
               onClick={() => setAddedItemModal(null)}
-              className="w-full bg-white hover:bg-gray-50 text-[#1E3F20] border border-[#1E3F20] py-3.5 rounded-full font-bold text-sm tracking-wide transition flex items-center justify-center cursor-pointer"
+              className="w-full bg-white hover:bg-gray-50 text-[#1E3F20] border border-[#1E3F20] py-3.5 rounded-full font-bold text-sm tracking-wide transition-[color,background-color,border-color,opacity,transform] duration-150 flex items-center justify-center cursor-pointer active:scale-[0.97]"
             >
               Continue Shopping
             </button>
@@ -108,6 +108,7 @@ export const AddedToCartModal = ({ onNavigateToCart }) => {
           <div className="w-32 h-1 bg-black/20 rounded-full mx-auto mt-6" />
         </motion.div>
       </motion.div>
+    )}
     </AnimatePresence>
   );
 };

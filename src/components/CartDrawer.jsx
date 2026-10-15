@@ -10,7 +10,6 @@ export const CartDrawer = ({ onNavigateToProduct, onViewCart }) => {
   const [appliedCode, setAppliedCode] = useState(null);
   const discountApplied = Boolean(appliedCode);
 
-  if (!isCartOpen) return null;
 
   const freeShippingThreshold = FREE_SHIPPING_THRESHOLD;
   const progressPercent = Math.min(100, (cartSubtotal / freeShippingThreshold) * 100);
@@ -27,18 +26,19 @@ export const CartDrawer = ({ onNavigateToProduct, onViewCart }) => {
 
   return (
     <AnimatePresence>
+      {isCartOpen && (
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
+        exit={{ opacity: 0, transition: { duration: 0.2 } }}
         className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex justify-end"
         onClick={() => setIsCartOpen(false)}
       >
         <motion.div
           initial={{ x: "100%" }}
           animate={{ x: 0 }}
-          exit={{ x: "100%" }}
-          transition={{ type: "spring", damping: 28, stiffness: 300 }}
+          exit={{ x: "100%", transition: { duration: 0.24, ease: [0.32, 0.72, 0, 1] } }}
+          transition={{ type: "tween", duration: 0.42, ease: [0.32, 0.72, 0, 1] }}
           className="bg-[#F7F9F6] w-full max-w-[420px] h-full shadow-2xl flex flex-col justify-between"
           onClick={(e) => e.stopPropagation()}
         >
@@ -52,7 +52,7 @@ export const CartDrawer = ({ onNavigateToProduct, onViewCart }) => {
             </div>
             <button
               onClick={() => setIsCartOpen(false)}
-              className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 hover:text-black transition cursor-pointer"
+              className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 hover:text-black transition-[color,background-color,border-color,opacity,transform] duration-150 cursor-pointer active:scale-[0.97]"
             >
               <X size={18} />
             </button>
@@ -91,7 +91,7 @@ export const CartDrawer = ({ onNavigateToProduct, onViewCart }) => {
                 </p>
                 <button
                   onClick={() => setIsCartOpen(false)}
-                  className="bg-[#1E3F20] text-white px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-[#285424] transition cursor-pointer shadow-sm"
+                  className="bg-[#1E3F20] text-white px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-[#285424] transition-[color,background-color,border-color,opacity,transform] duration-150 cursor-pointer shadow-sm active:scale-[0.97]"
                 >
                   Start Shopping
                 </button>
@@ -129,7 +129,7 @@ export const CartDrawer = ({ onNavigateToProduct, onViewCart }) => {
                       </h5>
                       <button
                         onClick={() => removeFromCart(item.id, item.size)}
-                        className="text-gray-400 hover:text-red-500 transition p-1 cursor-pointer"
+                        className="text-gray-400 hover:text-red-500 transition-[color,background-color,border-color,opacity,transform] duration-150 p-1 cursor-pointer active:scale-[0.97]"
                         title="Remove"
                       >
                         <Trash2 size={15} />
@@ -144,7 +144,7 @@ export const CartDrawer = ({ onNavigateToProduct, onViewCart }) => {
                       <div className="flex items-center border border-[#D5DCCF] rounded-lg bg-white overflow-hidden">
                         <button
                           onClick={() => updateQuantity(item.id, item.size, -1)}
-                          className="w-7 h-7 flex items-center justify-center text-[#1E3F20] hover:bg-gray-100 transition cursor-pointer"
+                          className="w-7 h-7 flex items-center justify-center text-[#1E3F20] hover:bg-gray-100 transition-[color,background-color,border-color,opacity,transform] duration-150 cursor-pointer active:scale-[0.97]"
                         >
                           <Minus size={12} />
                         </button>
@@ -153,7 +153,7 @@ export const CartDrawer = ({ onNavigateToProduct, onViewCart }) => {
                         </span>
                         <button
                           onClick={() => updateQuantity(item.id, item.size, 1)}
-                          className="w-7 h-7 flex items-center justify-center text-[#1E3F20] hover:bg-gray-100 transition cursor-pointer"
+                          className="w-7 h-7 flex items-center justify-center text-[#1E3F20] hover:bg-gray-100 transition-[color,background-color,border-color,opacity,transform] duration-150 cursor-pointer active:scale-[0.97]"
                         >
                           <Plus size={12} />
                         </button>
@@ -193,7 +193,7 @@ export const CartDrawer = ({ onNavigateToProduct, onViewCart }) => {
                 </div>
                 <button
                   type="submit"
-                  className="bg-[#1E3F20] text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-[#285424] transition cursor-pointer"
+                  className="bg-[#1E3F20] text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-[#285424] transition-[color,background-color,border-color,opacity,transform] duration-150 cursor-pointer active:scale-[0.97]"
                 >
                   Apply
                 </button>
@@ -232,7 +232,7 @@ export const CartDrawer = ({ onNavigateToProduct, onViewCart }) => {
                   setIsCartOpen(false);
                   onViewCart();
                 }}
-                className="w-full bg-[#1E3F20] hover:bg-[#285424] text-white py-3.5 rounded-full font-bold text-sm tracking-wide transition shadow-md flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full bg-[#1E3F20] hover:bg-[#285424] text-white py-3.5 rounded-full font-bold text-sm tracking-wide transition-[color,background-color,border-color,opacity,transform] duration-150 shadow-md flex items-center justify-center gap-2 cursor-pointer active:scale-[0.97]"
               >
                 <span>View Cart &amp; Checkout</span>
                 <ArrowRight size={16} />
@@ -246,6 +246,7 @@ export const CartDrawer = ({ onNavigateToProduct, onViewCart }) => {
           )}
         </motion.div>
       </motion.div>
+    )}
     </AnimatePresence>
   );
 };

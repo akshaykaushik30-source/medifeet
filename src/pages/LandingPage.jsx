@@ -131,7 +131,7 @@ const Hero = ({ onNavigate }) => {
                 alt={`${a.name}, MediFeet ambassador`}
                 initial={reduceMotion ? { opacity: 0 } : { opacity: 0, x: 40, filter: 'blur(12px)' }}
                 animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-                exit={reduceMotion ? { opacity: 0 } : { opacity: 0, x: -30, filter: 'blur(10px)' }}
+                exit={reduceMotion ? { opacity: 0 } : { opacity: 0, x: -30, filter: 'blur(10px)', transition: { duration: 0.5, ease: EASE } }}
                 transition={reduceMotion ? { duration: 0.3 } : { duration: 1.1, ease: EASE }}
                 className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-full w-auto max-w-none object-contain object-bottom ${a.fadeRight ? 'hero-fade-bottom-right' : 'hero-fade-bottom'}`}
               />
@@ -148,7 +148,7 @@ const Hero = ({ onNavigate }) => {
                 onClick={() => onNavigate(a.shop)}
                 initial={reduceMotion ? { opacity: 0 } : { opacity: 0, x: 120, rotate: 10, filter: 'blur(6px)' }}
                 animate={{ opacity: 1, x: 0, rotate: 0, filter: 'blur(0px)' }}
-                exit={reduceMotion ? { opacity: 0 } : { opacity: 0, x: -120, rotate: -10, filter: 'blur(6px)' }}
+                exit={reduceMotion ? { opacity: 0 } : { opacity: 0, x: -120, rotate: -10, filter: 'blur(6px)', transition: { duration: 0.45, ease: EASE } }}
                 transition={reduceMotion ? { duration: 0.3 } : { type: 'spring', duration: 0.9, bounce: 0 }}
                 className="group block w-full cursor-pointer text-left"
                 aria-label={`Shop ${a.product.label}`}
@@ -168,7 +168,7 @@ const Hero = ({ onNavigate }) => {
         <div className="hidden lg:block absolute right-[5%] bottom-[10%] w-[300px] z-10">
           <div className="min-h-[4.5rem]" aria-live="polite">
             <AnimatePresence mode="wait">
-              <motion.div key={a.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.6, ease: EASE }}>
+              <motion.div key={a.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6, transition: { duration: 0.25 } }} transition={{ duration: 0.6, ease: EASE }}>
                 <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-[#6B675F]">{a.name}</p>
                 <p className="mt-2 text-[15px] leading-relaxed text-[#1A1A17]">{a.tagline}</p>
               </motion.div>

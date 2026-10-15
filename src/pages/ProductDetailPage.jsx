@@ -173,7 +173,7 @@ export const ProductDetailPage = ({ productId, onNavigate }) => {
                         setAdded(false);
                       }}
                       aria-pressed={c.name === color}
-                      className={`flex items-center gap-2 pl-1.5 pr-3.5 py-1.5 rounded-xl border text-sm cursor-pointer transition ${
+                      className={`flex items-center gap-2 pl-1.5 pr-3.5 py-1.5 rounded-xl border text-sm cursor-pointer transition-[color,background-color,border-color,opacity,transform] duration-150 ${
                         c.name === color ? 'border-[#1E3F20] bg-[#F4F6F2] font-semibold' : 'border-gray-200 hover:border-[#1E3F20]'
                       }`}
                     >
@@ -203,7 +203,7 @@ export const ProductDetailPage = ({ productId, onNavigate }) => {
                         }}
                         aria-pressed={s === size}
                         title={soldOut ? 'Sold out' : undefined}
-                        className={`py-3 rounded-xl border font-['Geist_Mono'] font-bold text-sm transition cursor-pointer disabled:cursor-not-allowed disabled:text-gray-300 disabled:line-through disabled:bg-gray-50 ${
+                        className={`py-3 rounded-xl border font-['Geist_Mono'] font-bold text-sm transition-[color,background-color,border-color,opacity,transform] duration-150 cursor-pointer disabled:cursor-not-allowed disabled:text-gray-300 disabled:line-through disabled:bg-gray-50 ${
                           s === size ? 'bg-[#1E3F20] border-[#1E3F20] text-white' : 'border-gray-200 hover:border-[#1E3F20]'
                         }`}
                       >
@@ -232,7 +232,7 @@ export const ProductDetailPage = ({ productId, onNavigate }) => {
               </div>
               <button
                 onClick={handleAdd}
-                className="flex-1 bg-[#1E3F20] hover:bg-[#285424] text-white font-['Outfit'] font-bold text-sm uppercase tracking-wide py-4 rounded-full transition cursor-pointer"
+                className="flex-1 bg-[#1E3F20] hover:bg-[#285424] text-white font-['Outfit'] font-bold text-sm uppercase tracking-wide py-4 rounded-full transition-[color,background-color,border-color,opacity,transform] duration-150 cursor-pointer active:scale-[0.97]"
               >
                 Add to cart · {formatPrice(price * quantity)}
               </button>

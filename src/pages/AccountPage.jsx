@@ -68,7 +68,7 @@ export const AccountPage = ({ onNavigate }) => {
               <button
                 key={id}
                 onClick={() => (id === 'wishlist' ? onNavigate('shop') : setActive(id))}
-                className={`flex items-center gap-3 px-4 py-3 rounded-md text-sm font-['Outfit'] font-medium whitespace-nowrap transition cursor-pointer ${
+                className={`flex items-center gap-3 px-4 py-3 rounded-md text-sm font-['Outfit'] font-medium whitespace-nowrap transition-[color,background-color,border-color,opacity,transform] duration-150 cursor-pointer ${
                   active === id ? 'bg-[#1E3F20] text-white' : 'hover:bg-[#F4F6F2]'
                 }`}
               >
@@ -81,7 +81,7 @@ export const AccountPage = ({ onNavigate }) => {
                 signOut();
                 onNavigate('home');
               }}
-              className="flex items-center gap-3 px-4 py-3 rounded-md text-sm font-['Outfit'] font-medium text-[#B42318] hover:bg-[#FEF3F2] whitespace-nowrap transition cursor-pointer"
+              className="flex items-center gap-3 px-4 py-3 rounded-md text-sm font-['Outfit'] font-medium text-[#B42318] hover:bg-[#FEF3F2] whitespace-nowrap transition-[color,background-color,border-color,opacity,transform] duration-150 cursor-pointer active:scale-[0.97]"
             >
               <LogOut size={16} />
               Sign Out
@@ -98,7 +98,7 @@ export const AccountPage = ({ onNavigate }) => {
             </div>
             <button
               onClick={() => onNavigate('shop')}
-              className="bg-[#1E3F20] hover:bg-[#285424] text-white font-['Outfit'] font-bold text-sm uppercase px-5 py-3 rounded-md transition cursor-pointer"
+              className="bg-[#1E3F20] hover:bg-[#285424] text-white font-['Outfit'] font-bold text-sm uppercase px-5 py-3 rounded-md transition-[color,background-color,border-color,opacity,transform] duration-150 cursor-pointer active:scale-[0.97]"
             >
               Shop New Collection
             </button>

@@ -193,10 +193,10 @@ const ProductTile = ({ product, onNavigate, index }) => {
                 alt={product.name}
                 loading="lazy"
                 onError={() => setFailed(true)}
-                className={`absolute inset-0 w-full h-full object-contain p-6 transition-[opacity,transform] duration-700 ease-out group-hover:scale-[1.04] ${second ? 'group-hover:opacity-0' : ''}`}
+                className={`absolute inset-0 w-full h-full object-contain p-6 transition-[opacity,transform] duration-300 ease-out group-hover:scale-[1.03] ${second ? 'group-hover:opacity-0' : ''}`}
               />
               {second && (
-                <img src={productImage(second, 700)} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-contain p-6 opacity-0 transition-opacity duration-700 ease-out group-hover:opacity-100" />
+                <img src={productImage(second, 700)} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-contain p-6 opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100" />
               )}
             </>
           )}
@@ -237,7 +237,7 @@ const OtherCollection = ({ other, onNavigate }) => {
         <span className="absolute left-8 sm:left-12 bottom-8 sm:bottom-12 text-white">
           <span className="block text-[11px] uppercase tracking-[0.28em] text-white/75 mb-3">Also from MediFeet</span>
           <span className="flex items-center gap-3 font-['Outfit'] font-medium text-4xl sm:text-6xl tracking-[-0.03em]">
-            {other.label} <ArrowRight className="w-8 h-8 sm:w-12 sm:h-12 group-hover:translate-x-2 transition-transform duration-500" />
+            {other.label} <ArrowRight className="w-8 h-8 sm:w-12 sm:h-12 group-hover:translate-x-2 transition-transform duration-300 ease-out" />
           </span>
         </span>
       </button>

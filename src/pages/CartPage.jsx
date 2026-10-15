@@ -68,7 +68,7 @@ export const CartPage = ({ onNavigate }) => {
                 <p className="text-sm text-[#6B7280]">Find a pair built for all-day comfort.</p>
                 <button
                   onClick={() => onNavigate('shop')}
-                  className="bg-[#111111] hover:bg-[#1E3F20] text-white font-['Outfit'] font-bold text-sm px-8 py-3.5 rounded-full transition cursor-pointer"
+                  className="bg-[#111111] hover:bg-[#1E3F20] text-white font-['Outfit'] font-bold text-sm px-8 py-3.5 rounded-full transition-[color,background-color,border-color,opacity,transform] duration-150 cursor-pointer active:scale-[0.97]"
                 >
                   Shop the collection
                 </button>
@@ -167,7 +167,7 @@ export const CartPage = ({ onNavigate }) => {
                   placeholder="Promo code"
                   className="flex-1 min-w-0 bg-white border border-gray-200 rounded-full px-4 py-3 text-[13px] uppercase placeholder:normal-case focus:outline-none focus:border-[#1E3F20]"
                 />
-                <button type="submit" className="bg-[#111111] hover:bg-[#1E3F20] text-white font-['Outfit'] font-bold text-xs uppercase px-5 rounded-full transition cursor-pointer">
+                <button type="submit" className="bg-[#111111] hover:bg-[#1E3F20] text-white font-['Outfit'] font-bold text-xs uppercase px-5 rounded-full transition-[color,background-color,border-color,opacity,transform] duration-150 cursor-pointer active:scale-[0.97]">
                   Apply
                 </button>
               </div>
@@ -176,7 +176,7 @@ export const CartPage = ({ onNavigate }) => {
 
             <button
               onClick={() => setCheckoutNotice(true)}
-              className="w-full bg-[#111111] hover:bg-[#1E3F20] text-white font-['Outfit'] font-bold text-sm uppercase tracking-wide py-4 rounded-full transition cursor-pointer"
+              className="w-full bg-[#111111] hover:bg-[#1E3F20] text-white font-['Outfit'] font-bold text-sm uppercase tracking-wide py-4 rounded-full transition-[color,background-color,border-color,opacity,transform] duration-150 cursor-pointer active:scale-[0.97]"
             >
               Proceed to Checkout
             </button>
@@ -212,7 +212,7 @@ export const CartPage = ({ onNavigate }) => {
                 className="bg-white rounded-lg p-3 sm:p-4 text-left group cursor-pointer"
               >
                 <div className="aspect-square bg-[#F8F9FB] rounded-md overflow-hidden mb-4">
-                  <img src={product.image} alt={product.name} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" />
+                  <img src={product.image} alt={product.name} className="w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-200 ease-out" />
                 </div>
                 <div className="flex flex-wrap items-baseline justify-between gap-1">
                   <span className="font-['Outfit'] font-semibold text-sm sm:text-[15px]">{product.name}</span>
