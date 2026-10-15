@@ -4,6 +4,7 @@ import { useCart } from '../context/CartContext';
 import { loadCatalog, productImage, discountPercent, CATEGORY_LABELS, GENDER_LABELS } from '../data/catalog';
 import { FREE_SHIPPING_LABEL, formatPrice } from '../config';
 import ProductCard from '../components/ProductCard';
+import FeatureStrip from '../components/FeatureStrip';
 
 const SHOP_PAGE = { women: 'shop', men: 'men' };
 
@@ -262,6 +263,8 @@ export const ProductDetailPage = ({ productId, onNavigate }) => {
                 </li>
               ))}
             </ul>
+
+            <FeatureStrip variant="compact" />
 
             {product.highlights.length > 0 && (
               <div className="space-y-3 pt-2">

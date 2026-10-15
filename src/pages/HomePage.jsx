@@ -6,6 +6,7 @@ import {
   Compass, Eye, Clock, Truck, RefreshCw, Leaf, Activity, HeartHandshake
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import FeatureStrip from '../components/FeatureStrip';
 
 export const HomePage = ({ onNavigate }) => {
   const { addToCart } = useCart();
@@ -237,6 +238,12 @@ export const HomePage = ({ onNavigate }) => {
             <span>24-HOUR DISPATCH</span>
           </div>
         </div>
+
+        {/* Comfort features built into every pair */}
+        <section className="mb-12">
+          <h2 className="font-['Outfit'] font-bold text-2xl text-[#1E3F20] mb-4">Built into every pair</h2>
+          <FeatureStrip variant="compact" />
+        </section>
 
         {/* Brand Ambassador Section: Bobby Deol */}
         <section className="bg-white rounded-3xl p-6 sm:p-10 border border-[#E8EDDF] shadow-sm mb-12">

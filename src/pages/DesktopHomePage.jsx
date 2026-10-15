@@ -9,6 +9,7 @@ import {
 import { useCart } from '../context/CartContext';
 import DesktopHeader from '../components/DesktopHeader';
 import VideoControls from '../components/VideoControls';
+import FeatureStrip from '../components/FeatureStrip';
 
 const InstagramIcon = ({ size = 16, className = "" }) => (
   <svg 
@@ -821,6 +822,8 @@ export const DesktopHomePage = ({ onNavigate }) => {
           </section>
         );
       })()}
+
+      <FeatureStrip />
 
       {/* ========================================================================= */}
       {/* 6. BEST SELLERS SECTION (Figma Node 192:214)                              */}
