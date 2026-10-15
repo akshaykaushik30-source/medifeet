@@ -61,7 +61,6 @@ const swap = (url) => localFor.get(url) ?? url;
 for (const p of products) {
   p.images = p.images.map(swap);
   p.colors = p.colors.map((c) => ({ ...c, image: c.image && swap(c.image) }));
-  p.variants = p.variants.map((v) => ({ ...v, image: v.image && swap(v.image) }));
 }
 await writeFile(dataFile, JSON.stringify(products, null, 1));
 console.log(`done: ${done} downloaded, ${failed} failed`);

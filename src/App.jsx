@@ -23,6 +23,7 @@ const DesktopContactPage = lazy(() => import('./pages/DesktopContactPage'));
 const CartPage = lazy(() => import('./pages/CartPage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const AccountPage = lazy(() => import('./pages/AccountPage'));
+const ProductDetailPage = lazy(() => import('./pages/ProductDetailPage'));
 
 const PAGES = ['home', 'shop', 'men', 'product', 'about', 'contact', 'cart', 'login', 'account'];
 
@@ -37,14 +38,17 @@ const forcedMode = () => {
   return mode === 'mobile' || mode === 'desktop' ? mode : null;
 };
 const modeForWidth = () => (window.innerWidth < MOBILE_BREAKPOINT ? 'mobile' : 'desktop');
-const pageFromHash = () => {
-  const hash = window.location.hash.replace('#', '');
-  return PAGES.includes(hash) ? hash : 'home';
+// A route is a page id, optionally followed by a product id: "product/<id>".
+const routeFromHash = () => {
+  const hash = decodeURIComponent(window.location.hash.replace('#', ''));
+  return PAGES.includes(hash.split('/')[0]) ? hash : 'home';
 };
 
 const MainAppContent = () => {
   const [viewMode, setViewMode] = useState(() => forcedMode() ?? modeForWidth());
-  const [currentPage, setCurrentPage] = useState(pageFromHash);
+  const [route, setRoute] = useState(routeFromHash);
+  const [currentPage, ...rest] = route.split('/');
+  const productId = rest.join('/');
   const { setAddedItemModal, setIsCartOpen } = useCart();
 
   useEffect(() => {
@@ -56,7 +60,7 @@ const MainAppContent = () => {
 
   // Back/forward buttons and pasted links change the hash; follow them.
   useEffect(() => {
-    const onHashChange = () => setCurrentPage(pageFromHash());
+    const onHashChange = () => setRoute(routeFromHash());
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
@@ -65,18 +69,22 @@ const MainAppContent = () => {
   useEffect(() => {
     setAddedItemModal(null);
     setIsCartOpen(false);
-  }, [currentPage, setAddedItemModal, setIsCartOpen]);
+  }, [route, setAddedItemModal, setIsCartOpen]);
 
   useEffect(() => {
-    if (window.location.hash !== `#${currentPage}`) window.location.hash = currentPage;
+    if (decodeURIComponent(window.location.hash) !== `#${route}`) window.location.hash = route;
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [currentPage]);
+  }, [route]);
 
-  const handleNavigate = useCallback((pageId) => {
-    setCurrentPage(pageId);
+  const handleNavigate = useCallback((nextRoute) => {
+    setRoute(nextRoute);
   }, []);
 
+  // A catalogue product gets its own page; plain #product still shows the CloudWalk showcase.
   const SharedPage = SHARED_PAGES[currentPage];
+  const sharedPage = currentPage === 'product' && productId
+    ? <ProductDetailPage key={productId} productId={productId} onNavigate={handleNavigate} />
+    : SharedPage && <SharedPage onNavigate={handleNavigate} />;
 
   return (
     <div className="min-h-screen bg-[#FFFFFF] flex flex-col font-['Geist'] selection:bg-[#84BD3A] selection:text-[#1E3F20]">
@@ -87,13 +95,13 @@ const MainAppContent = () => {
           {currentPage === 'home' && <DesktopHomePage onNavigate={handleNavigate} />}
           {currentPage === 'shop' && <DesktopShopPage onNavigate={handleNavigate} />}
           {currentPage === 'men' && <DesktopMenShopPage onNavigate={handleNavigate} />}
-          {currentPage === 'product' && <DesktopProductPage onNavigate={handleNavigate} />}
+          {currentPage === 'product' && !productId && <DesktopProductPage onNavigate={handleNavigate} />}
           {currentPage === 'about' && <DesktopAboutPage onNavigate={handleNavigate} />}
           {currentPage === 'contact' && <DesktopContactPage onNavigate={handleNavigate} />}
-          {SharedPage && (
+          {sharedPage && (
             <>
               <DesktopHeader currentPage={currentPage} onNavigate={handleNavigate} />
-              <SharedPage onNavigate={handleNavigate} />
+              {sharedPage}
               <DesktopFooter onNavigate={handleNavigate} />
             </>
           )}
@@ -105,14 +113,15 @@ const MainAppContent = () => {
 
           <main className="flex-1 pb-16">
             {currentPage === 'home' && <HomePage onNavigate={handleNavigate} />}
-            {/* The mobile layout has a single shop page for every collection */}
-            {(currentPage === 'shop' || currentPage === 'men') && <ShopPage onNavigate={handleNavigate} />}
-            {currentPage === 'product' && (
+            {(currentPage === 'shop' || currentPage === 'men') && (
+              <ShopPage gender={currentPage === 'men' ? 'men' : 'women'} onNavigate={handleNavigate} />
+            )}
+            {currentPage === 'product' && !productId && (
               <DemoPage onNavigate={handleNavigate} onSwitchToOriginal={() => handleNavigate('shop')} />
             )}
             {currentPage === 'about' && <AboutPage onNavigate={handleNavigate} />}
             {currentPage === 'contact' && <ContactPage onNavigate={handleNavigate} />}
-            {SharedPage && <SharedPage onNavigate={handleNavigate} />}
+            {sharedPage}
           </main>
 
           <Footer onNavigate={handleNavigate} />
