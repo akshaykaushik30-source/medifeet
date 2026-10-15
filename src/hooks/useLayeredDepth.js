@@ -20,11 +20,10 @@ export const useLayeredDepth = (sectionRef) => {
     },
     figure: { x: useTransform(sx, (v) => v * 18), y: useTransform(sy, (v) => v * 10) },
     figureScroll: { y: useTransform(scrollYProgress, [0, 1], [0, 60]) },
-    product: { x: useTransform(sx, (v) => v * 46), y: useTransform(sy, (v) => v * 30), rotate: useTransform(sx, (v) => v * 6) },
-    productScroll: {
-      y: useTransform(scrollYProgress, [0, 1], [0, -220]),
-      rotate: useTransform(scrollYProgress, [0, 1], [0, -14]),
-    },
+    product: { x: useTransform(sx, (v) => v * 46), y: useTransform(sy, (v) => v * 30) },
+    productScroll: { y: useTransform(scrollYProgress, [0, 1], [0, -220]) },
+    // Rotation goes on the shoe alone so its label stays level.
+    productRotate: useTransform([sx, scrollYProgress], ([x, p]) => x * 6 - p * 14),
   };
 
   const handlers = {
@@ -43,5 +42,5 @@ export const useLayeredDepth = (sectionRef) => {
   // With reduced motion every layer stays still.
   const style = (key) => (reduceMotion ? {} : layers[key]);
 
-  return { style, handlers, reduceMotion };
+  return { style, handlers, reduceMotion, productRotate: layers.productRotate };
 };

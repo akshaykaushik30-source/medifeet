@@ -7,6 +7,7 @@ import { loadCatalog } from '../data/catalog';
 import { formatPrice } from '../config';
 import TrustMarquee from '../components/TrustMarquee';
 import ShoeStory from '../components/ShoeStory';
+import HeroProduct from '../components/HeroProduct';
 import CommunityReels from '../components/CommunityReels';
 
 // Minimal palette: warm paper, near-black ink, green only as an accent.
@@ -77,6 +78,7 @@ const Hero = ({ onNavigate }) => {
   const personScrollY = useTransform(scrollYProgress, [0, 1], [0, 60]);
   const shoeScrollY = useTransform(scrollYProgress, [0, 1], [0, -220]);
   const shoeScrollRotate = useTransform(scrollYProgress, [0, 1], [0, -14]);
+  const shoeRotate = useTransform([shoeTilt, shoeScrollRotate], ([t, s]) => t + s);
 
   const onPointerMove = (e) => {
     if (reduceMotion || e.pointerType !== 'mouse') return;
@@ -140,8 +142,8 @@ const Hero = ({ onNavigate }) => {
         </motion.div>
 
         {/* Front layer: the shoe */}
-        <motion.div style={still ?? { y: shoeScrollY, rotate: shoeScrollRotate }} className="absolute left-[2%] sm:left-[4%] lg:left-[7%] bottom-[7%] lg:bottom-[9%] w-[52%] sm:w-[40%] lg:w-[30%] max-w-[520px] z-10">
-          <motion.div style={still ?? { x: shoeX, y: shoeY, rotate: shoeTilt }}>
+        <motion.div style={still ?? { y: shoeScrollY }} className="absolute left-[2%] sm:left-[4%] lg:left-[7%] bottom-[7%] lg:bottom-[9%] w-[52%] sm:w-[40%] lg:w-[30%] max-w-[520px] z-10">
+          <motion.div style={still ?? { x: shoeX, y: shoeY }}>
             <AnimatePresence mode="wait">
               <motion.button
                 key={a.product.image}
@@ -153,8 +155,8 @@ const Hero = ({ onNavigate }) => {
                 className="group block w-full cursor-pointer text-left"
                 aria-label={`Shop ${a.product.label}`}
               >
-                <img src={a.product.image} alt="" className="w-full drop-shadow-[0_40px_36px_rgba(26,26,23,0.25)]" />
-                <span className="mt-3 ml-[8%] inline-flex items-center gap-2 whitespace-nowrap bg-white/85 backdrop-blur rounded-full px-4 py-2 text-xs sm:text-sm text-[#1A1A17] shadow-[0_4px_20px_rgba(0,0,0,0.06)]">
+                <HeroProduct src={a.product.image} rotate={still ? undefined : shoeRotate} />
+                <span className="mt-1 ml-[8%] inline-flex items-center gap-2 whitespace-nowrap bg-white/85 backdrop-blur rounded-full px-4 py-2 text-xs sm:text-sm text-[#1A1A17] shadow-[0_4px_20px_rgba(0,0,0,0.06)]">
                   <span className="font-medium">{a.product.label}</span>
                   <span className="text-[#6B675F]">from {formatPrice(a.product.from)}</span>
                   <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />

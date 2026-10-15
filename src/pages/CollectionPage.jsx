@@ -4,6 +4,7 @@ import { ArrowRight, ArrowUpRight, Heart } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useLayeredDepth } from '../hooks/useLayeredDepth';
 import { loadCatalog, productImage, discountPercent, productRoute, CATEGORY_LABELS } from '../data/catalog';
+import HeroProduct from '../components/HeroProduct';
 import { formatPrice } from '../config';
 
 const EASE = [0.22, 1, 0.36, 1];
@@ -37,7 +38,7 @@ const COLLECTIONS = {
 // ---------------------------------------------------------------------------
 const CollectionHero = ({ c, stats, onPickCategory }) => {
   const sectionRef = useRef(null);
-  const { style, handlers, reduceMotion } = useLayeredDepth(sectionRef);
+  const { style, handlers, reduceMotion, productRotate } = useLayeredDepth(sectionRef);
   const productStats = stats?.categories[c.product.category];
 
   return (
@@ -102,8 +103,8 @@ const CollectionHero = ({ c, stats, onPickCategory }) => {
               className="group block w-full text-left cursor-pointer"
               aria-label={`Show ${c.product.label}`}
             >
-              <img src={c.product.image} alt="" className="w-full drop-shadow-[0_40px_36px_rgba(26,26,23,0.25)]" />
-              <span className="mt-3 ml-[8%] inline-flex items-center gap-2 whitespace-nowrap bg-white/85 backdrop-blur rounded-full px-4 py-2 text-xs sm:text-sm text-[#1A1A17] shadow-[0_4px_20px_rgba(0,0,0,0.06)]">
+              <HeroProduct src={c.product.image} rotate={reduceMotion ? undefined : productRotate} />
+              <span className="mt-1 ml-[8%] inline-flex items-center gap-2 whitespace-nowrap bg-white/85 backdrop-blur rounded-full px-4 py-2 text-xs sm:text-sm text-[#1A1A17] shadow-[0_4px_20px_rgba(0,0,0,0.06)]">
                 <span className="font-medium">{c.product.label}</span>
                 {productStats && <span className="text-[#6B675F]">{productStats.count} styles</span>}
                 <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
