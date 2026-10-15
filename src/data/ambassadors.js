@@ -8,6 +8,8 @@ export const AMBASSADORS = [
     tagline: "Every step tells a story. Bobby Deol's starts with MediFeet.",
     image: '/assets/medifeet_home/img_0_35_104_bobby_deol_portrait.png',
     cutout: '/assets/ambassador-bobby-deol-cutout.webp',
+    // The original photo ends in a straight edge on the right; fade it out.
+    fadeRight: true,
     shop: 'men',
     product: { image: '/assets/hero-shoe-men-derby.webp', label: "Men's formal shoes", from: 1100 },
   },

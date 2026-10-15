@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion, useMotionValue, useSpring } from 'framer-motion';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { AMBASSADORS } from '../data/ambassadors';
 import { useRotation } from '../hooks/useRotation';
@@ -13,7 +13,7 @@ import CommunityReels from '../components/CommunityReels';
 const INK = 'text-[#1A1A17]';
 const MUTED = 'text-[#6B675F]';
 const EASE = [0.22, 1, 0.36, 1];
-const SLIDE_MS = 7000;
+const SLIDE_MS = 7500;
 
 const Eyebrow = ({ children, className = '' }) => (
   <p className={`text-[11px] font-medium uppercase tracking-[0.28em] ${MUTED} ${className}`}>{children}</p>
@@ -33,120 +33,188 @@ const HERO_CATEGORIES = [
   { label: 'Formal shoes', page: 'men' },
 ];
 
+// Giant brand word whose letters rise in one after another on load.
+const BigWord = ({ word }) => (
+  <span className="inline-flex overflow-hidden pb-[0.06em]" aria-label={word}>
+    {word.split('').map((ch, i) => (
+      <motion.span
+        key={i}
+        aria-hidden="true"
+        initial={{ y: '100%' }}
+        animate={{ y: 0 }}
+        transition={{ duration: 1.3, ease: EASE, delay: 0.15 + i * 0.06 }}
+        className="inline-block"
+      >
+        {ch}
+      </motion.span>
+    ))}
+  </span>
+);
+
 const Hero = ({ onNavigate }) => {
+  const sectionRef = useRef(null);
   const { index, setIndex, paused, setPaused } = useRotation(AMBASSADORS.length, SLIDE_MS);
   const reduceMotion = useReducedMotion();
   const a = AMBASSADORS[index];
 
+  // Pointer depth: each layer follows the pointer by a different amount.
+  const px = useMotionValue(0);
+  const py = useMotionValue(0);
+  const sx = useSpring(px, { stiffness: 60, damping: 20, mass: 0.6 });
+  const sy = useSpring(py, { stiffness: 60, damping: 20, mass: 0.6 });
+  const wordX = useTransform(sx, (v) => v * -24);
+  const personX = useTransform(sx, (v) => v * 18);
+  const personY = useTransform(sy, (v) => v * 10);
+  const shoeX = useTransform(sx, (v) => v * 46);
+  const shoeY = useTransform(sy, (v) => v * 30);
+  const shoeTilt = useTransform(sx, (v) => v * 6);
+
+  // Scroll exit: layers drift apart at different speeds.
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] });
+  const wordScrollY = useTransform(scrollYProgress, [0, 1], [0, -140]);
+  const wordScale = useTransform(scrollYProgress, [0, 1], [1, 1.12]);
+  const wordOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0.15]);
+  const personScrollY = useTransform(scrollYProgress, [0, 1], [0, 60]);
+  const shoeScrollY = useTransform(scrollYProgress, [0, 1], [0, -220]);
+  const shoeScrollRotate = useTransform(scrollYProgress, [0, 1], [0, -14]);
+
+  const onPointerMove = (e) => {
+    if (reduceMotion || e.pointerType !== 'mouse') return;
+    const r = sectionRef.current.getBoundingClientRect();
+    px.set((e.clientX - r.left) / r.width - 0.5);
+    py.set((e.clientY - r.top) / r.height - 0.5);
+  };
+
+  const still = reduceMotion ? {} : null;
+
   return (
     <section
-      className="bg-white"
+      ref={sectionRef}
+      onPointerMove={onPointerMove}
       onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      onMouseLeave={() => {
+        setPaused(false);
+        px.set(0);
+        py.set(0);
+      }}
+      className="relative bg-white overflow-hidden"
       aria-roledescription="carousel"
       aria-label="Our ambassadors"
     >
-      <div className="max-w-[1400px] mx-auto px-5 sm:px-10 grid grid-cols-2 lg:grid-cols-12 items-center lg:min-h-[640px]">
-        {/* Wordmark headline */}
-        <div className="col-span-2 lg:col-span-4 pt-10 lg:pt-0 order-1">
-          <h1 className="text-[#4A4A48]">
-            <span className="block overflow-hidden">
-              <motion.span initial={{ y: '100%' }} animate={{ y: 0 }} transition={{ duration: 1, ease: EASE }} className="block font-['Outfit'] font-light text-3xl sm:text-[40px] tracking-[0.18em] uppercase">
-                Experience
-              </motion.span>
+      <div className="relative h-[640px] sm:h-[720px] lg:h-[calc(100vh-116px)] lg:min-h-[680px] lg:max-h-[1000px]">
+        {/* Back layer: the giant word */}
+        <motion.div
+          style={still ?? { y: wordScrollY, scale: wordScale, opacity: wordOpacity }}
+          className="absolute inset-x-0 top-[30%] sm:top-[34%] lg:top-[26%] flex justify-center select-none pointer-events-none"
+        >
+          <motion.div style={still ?? { x: wordX }} className="relative text-[#24241F]">
+            <span className="absolute -top-[0.9em] left-[0.06em] font-['Outfit'] font-light uppercase tracking-[0.32em] text-[13px] sm:text-xl lg:text-2xl text-[#6B675F]">
+              Experience
             </span>
-            <span className="block overflow-hidden -mt-1">
-              <motion.span initial={{ y: '100%' }} animate={{ y: 0 }} transition={{ duration: 1.1, ease: EASE, delay: 0.1 }} className="block font-['Outfit'] font-normal text-[92px] sm:text-[120px] lg:text-[112px] xl:text-[124px] leading-[0.9] tracking-[-0.04em]">
-                comfort
-              </motion.span>
+            <h1 className="font-['Outfit'] font-normal leading-[0.8] tracking-[-0.055em] text-[25vw] lg:text-[24vw] xl:text-[22vw] 2xl:text-[360px]">
+              <BigWord word="comfort" />
+            </h1>
+            <span className="absolute right-[0.04em] -bottom-[1.3em] flex items-baseline gap-2 font-['Outfit']">
+              <span className="text-sm sm:text-xl font-light text-[#6B675F]">by</span>
+              <span className="text-base sm:text-2xl lg:text-3xl font-semibold tracking-[0.06em]">MEDIFEET</span>
             </span>
-            <span className="block overflow-hidden mt-2">
-              <motion.span initial={{ y: '100%' }} animate={{ y: 0 }} transition={{ duration: 1, ease: EASE, delay: 0.2 }} className="flex items-baseline gap-2.5 font-['Outfit']">
-                <span className="text-2xl font-light">by</span>
-                <span className="text-3xl sm:text-[38px] font-semibold tracking-[0.04em]">MEDIFEET</span>
-              </motion.span>
-            </span>
-          </h1>
-
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.6 }} className="mt-8 hidden lg:block">
-            <div className="min-h-[3rem]" aria-live="polite">
-              <AnimatePresence mode="wait">
-                <motion.p key={a.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }} className={`text-[15px] leading-relaxed max-w-[32ch] ${MUTED}`}>
-                  {a.tagline}
-                </motion.p>
-              </AnimatePresence>
-            </div>
-            <button
-              onClick={() => onNavigate(a.shop)}
-              className="mt-6 bg-[#1A1A17] hover:bg-[#1E3F20] text-white text-sm font-medium px-7 py-3.5 rounded-full transition-colors cursor-pointer"
-            >
-              Shop {a.product.label.toLowerCase()}
-            </button>
           </motion.div>
-        </div>
+        </motion.div>
 
-        {/* Product, large and centred */}
-        <div className="col-span-1 lg:col-span-4 order-2 flex flex-col items-center justify-center py-8 lg:py-0">
-          <AnimatePresence mode="wait">
-            <motion.button
-              key={a.product.image}
-              onClick={() => onNavigate(a.shop)}
-              initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 40, rotate: -8 }}
-              animate={{ opacity: 1, y: 0, rotate: 0 }}
-              exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -30, rotate: 6 }}
-              transition={{ duration: 0.9, ease: EASE }}
-              className="group w-full text-center cursor-pointer"
-              aria-label={`Shop ${a.product.label}`}
-            >
-              <img src={a.product.image} alt="" className="w-full max-w-[420px] mx-auto drop-shadow-[0_30px_30px_rgba(26,26,23,0.18)] group-hover:-translate-y-1.5 transition-transform duration-500" />
-              <span className={`mt-5 inline-flex items-center gap-1.5 text-sm ${MUTED}`}>
-                {a.product.label} · from {formatPrice(a.product.from)}
-                <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              </span>
-            </motion.button>
-          </AnimatePresence>
-        </div>
+        {/* Middle layer: the ambassador, standing in front of the word */}
+        <motion.div style={still ?? { y: personScrollY }} className="absolute inset-0 pointer-events-none">
+          <motion.div style={still ?? { x: personX, y: personY }} className="absolute bottom-0 left-1/2 -translate-x-1/2 lg:left-[56%] h-[78%] sm:h-[86%] lg:h-[94%] w-[70%] sm:w-[52%] lg:w-[34%]">
+            <AnimatePresence initial={false}>
+              <motion.img
+                key={a.id}
+                src={a.cutout}
+                alt={`${a.name}, MediFeet ambassador`}
+                initial={reduceMotion ? { opacity: 0 } : { opacity: 0, x: 40, filter: 'blur(12px)' }}
+                animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+                exit={reduceMotion ? { opacity: 0 } : { opacity: 0, x: -30, filter: 'blur(10px)' }}
+                transition={reduceMotion ? { duration: 0.3 } : { duration: 1.1, ease: EASE }}
+                className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-full w-auto max-w-none object-contain object-bottom ${a.fadeRight ? 'hero-fade-bottom-right' : 'hero-fade-bottom'}`}
+              />
+            </AnimatePresence>
+          </motion.div>
+        </motion.div>
 
-        {/* Ambassador cut out on white */}
-        <div className="col-span-1 lg:col-span-4 order-3 relative self-end h-[300px] sm:h-[420px] lg:h-[620px]">
-          <AnimatePresence initial={false}>
-            <motion.img
-              key={a.id}
-              src={a.cutout}
-              alt={`${a.name}, MediFeet ambassador`}
-              initial={reduceMotion ? { opacity: 0 } : { opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 1, ease: EASE }}
-              className="absolute bottom-0 right-0 h-full w-auto max-w-none object-contain object-bottom [mask-image:linear-gradient(to_top,transparent,#000_20%)]"
-            />
-          </AnimatePresence>
-          <AnimatePresence mode="wait">
-            <motion.p key={a.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className={`absolute bottom-3 right-0 text-xs tracking-wide ${MUTED} bg-white/80 backdrop-blur px-3 py-1.5 rounded-full`}>
-              {a.name}
-            </motion.p>
-          </AnimatePresence>
+        {/* Front layer: the shoe */}
+        <motion.div style={still ?? { y: shoeScrollY, rotate: shoeScrollRotate }} className="absolute left-[2%] sm:left-[4%] lg:left-[7%] bottom-[7%] lg:bottom-[9%] w-[52%] sm:w-[40%] lg:w-[30%] max-w-[520px] z-10">
+          <motion.div style={still ?? { x: shoeX, y: shoeY, rotate: shoeTilt }}>
+            <AnimatePresence mode="wait">
+              <motion.button
+                key={a.product.image}
+                onClick={() => onNavigate(a.shop)}
+                initial={reduceMotion ? { opacity: 0 } : { opacity: 0, x: 120, rotate: 10, filter: 'blur(6px)' }}
+                animate={{ opacity: 1, x: 0, rotate: 0, filter: 'blur(0px)' }}
+                exit={reduceMotion ? { opacity: 0 } : { opacity: 0, x: -120, rotate: -10, filter: 'blur(6px)' }}
+                transition={reduceMotion ? { duration: 0.3 } : { type: 'spring', duration: 0.9, bounce: 0 }}
+                className="group block w-full cursor-pointer text-left"
+                aria-label={`Shop ${a.product.label}`}
+              >
+                <img src={a.product.image} alt="" className="w-full drop-shadow-[0_40px_36px_rgba(26,26,23,0.25)]" />
+                <span className="mt-3 ml-[8%] inline-flex items-center gap-2 whitespace-nowrap bg-white/85 backdrop-blur rounded-full px-4 py-2 text-xs sm:text-sm text-[#1A1A17] shadow-[0_4px_20px_rgba(0,0,0,0.06)]">
+                  <span className="font-medium">{a.product.label}</span>
+                  <span className="text-[#6B675F]">from {formatPrice(a.product.from)}</span>
+                  <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                </span>
+              </motion.button>
+            </AnimatePresence>
+          </motion.div>
+        </motion.div>
+
+        {/* Story text and controls, bottom right on large screens */}
+        <div className="hidden lg:block absolute right-[5%] bottom-[10%] w-[300px] z-10">
+          <div className="min-h-[4.5rem]" aria-live="polite">
+            <AnimatePresence mode="wait">
+              <motion.div key={a.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.6, ease: EASE }}>
+                <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-[#6B675F]">{a.name}</p>
+                <p className="mt-2 text-[15px] leading-relaxed text-[#1A1A17]">{a.tagline}</p>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+          <button
+            onClick={() => onNavigate(a.shop)}
+            className="mt-6 bg-[#1A1A17] hover:bg-[#1E3F20] text-white text-sm font-medium px-7 py-3.5 rounded-full transition-[color,background-color,transform] duration-150 active:scale-[0.97] cursor-pointer"
+          >
+            Shop {a.product.label.toLowerCase()}
+          </button>
         </div>
       </div>
 
+      {/* Story text on small screens */}
+      <div className="lg:hidden px-5 pt-8 text-center">
+        <AnimatePresence mode="wait">
+          <motion.p key={a.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-[15px] leading-relaxed text-[#1A1A17] max-w-[34ch] mx-auto">
+            {a.tagline}
+          </motion.p>
+        </AnimatePresence>
+        <button onClick={() => onNavigate(a.shop)} className="mt-5 bg-[#1A1A17] text-white text-sm font-medium px-7 py-3.5 rounded-full transition-transform duration-150 active:scale-[0.97] cursor-pointer">
+          Shop {a.product.label.toLowerCase()}
+        </button>
+      </div>
+
       {/* Story-style progress bars */}
-      <div className="max-w-[1400px] mx-auto px-5 sm:px-10 pt-6 grid grid-cols-3 gap-4 lg:max-w-[460px] lg:mx-0 lg:ml-[max(40px,calc((100vw-1400px)/2+40px))]">
-        {AMBASSADORS.map((amb, i) => (
-          <button key={amb.id} onClick={() => setIndex(i)} className="text-left cursor-pointer group" aria-label={`Show ${amb.name}`} aria-current={i === index || undefined}>
-            <span className="block h-px bg-[#1A1A17]/15 overflow-hidden">
-              <span
-                key={`${amb.id}-${i === index ? index : 'idle'}`}
-                className="block h-full bg-[#1A1A17] origin-left"
-                style={{
-                  transform: i < index ? 'scaleX(1)' : i > index ? 'scaleX(0)' : undefined,
-                  animation: i === index && !reduceMotion ? `bar-fill ${SLIDE_MS}ms linear forwards` : undefined,
-                  animationPlayState: paused ? 'paused' : 'running',
-                }}
-              />
-            </span>
-            <span className={`block mt-2.5 text-xs transition-colors ${i === index ? INK : `${MUTED} group-hover:text-[#1A1A17]`}`}>{amb.name}</span>
-          </button>
-        ))}
+      <div className="max-w-[1400px] mx-auto px-5 sm:px-10 pt-8 lg:pt-4">
+        <div className="grid grid-cols-3 gap-4 max-w-[460px] mx-auto lg:mx-0">
+          {AMBASSADORS.map((amb, i) => (
+            <button key={amb.id} onClick={() => setIndex(i)} className="text-left cursor-pointer group" aria-label={`Show ${amb.name}`} aria-current={i === index || undefined}>
+              <span className="block h-px bg-[#1A1A17]/15 overflow-hidden">
+                <span
+                  key={`${amb.id}-${i === index ? index : 'idle'}`}
+                  className="block h-full bg-[#1A1A17] origin-left"
+                  style={{
+                    transform: i < index ? 'scaleX(1)' : i > index ? 'scaleX(0)' : undefined,
+                    animation: i === index && !reduceMotion ? `bar-fill ${SLIDE_MS}ms linear forwards` : undefined,
+                    animationPlayState: paused ? 'paused' : 'running',
+                  }}
+                />
+              </span>
+              <span className={`block mt-2.5 text-xs transition-colors ${i === index ? INK : `${MUTED} group-hover:text-[#1A1A17]`}`}>{amb.name}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Category line, like a shelf label under the hero */}

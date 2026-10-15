@@ -49,7 +49,7 @@ const Chapter = ({ chapter, index, progress, onNavigate }) => {
       <p className="mt-4 text-base sm:text-lg text-[#4A463F] leading-relaxed max-w-[34ch]">{chapter.text}</p>
       {chapter.cta && (
         <div className="mt-7 flex flex-wrap gap-3">
-          <button onClick={() => onNavigate('shop')} className="bg-[#1A1A17] hover:bg-[#1E3F20] text-white text-sm font-medium px-6 py-3 rounded-full inline-flex items-center gap-2 transition cursor-pointer">
+          <button onClick={() => onNavigate('shop')} className="bg-[#1A1A17] hover:bg-[#1E3F20] text-white text-sm font-medium px-6 py-3 rounded-full inline-flex items-center gap-2 transition duration-150 active:scale-[0.97] cursor-pointer">
             Shop women
           </button>
           <button onClick={() => onNavigate('men')} className="text-[#1A1A17] text-sm font-medium px-2 py-3 inline-flex items-center gap-1.5 cursor-pointer">

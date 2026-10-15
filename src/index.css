@@ -61,3 +61,20 @@
   from { transform: scaleX(0); }
   to { transform: scaleX(1); }
 }
+
+/* Lenis smooth scrolling */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* Soft edges for ambassador cut-outs in the hero. */
+.hero-fade-bottom {
+  -webkit-mask-image: linear-gradient(to top, transparent, #000 18%);
+  mask-image: linear-gradient(to top, transparent, #000 18%);
+}
+.hero-fade-bottom-right {
+  -webkit-mask-image: linear-gradient(to top, transparent, #000 18%), linear-gradient(to left, transparent, #000 16%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to top, transparent, #000 18%), linear-gradient(to left, transparent, #000 16%);
+  mask-composite: intersect;
+}

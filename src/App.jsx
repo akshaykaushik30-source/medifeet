@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react';
 import { CartProvider, useCart } from './context/CartContext';
 import { AccountProvider } from './context/AccountContext';
+import { useSmoothScroll, scrollToTop } from './hooks/useSmoothScroll';
 import DesktopHeader from './components/DesktopHeader';
 import DesktopFooter from './components/DesktopFooter';
 import Header from './components/Header';
@@ -49,6 +50,7 @@ const MainAppContent = () => {
   const [currentPage, ...rest] = route.split('/');
   const productId = rest.join('/');
   const { setAddedItemModal, setIsCartOpen } = useCart();
+  useSmoothScroll();
 
   useEffect(() => {
     if (forcedMode()) return undefined;
@@ -72,7 +74,7 @@ const MainAppContent = () => {
 
   useEffect(() => {
     if (decodeURIComponent(window.location.hash) !== `#${route}`) window.location.hash = route;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollToTop();
   }, [route]);
 
   const handleNavigate = useCallback((nextRoute) => {
