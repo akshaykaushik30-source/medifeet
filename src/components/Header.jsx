@@ -5,6 +5,7 @@ import {
   ShieldCheck, Truck, RefreshCw, Phone, Footprints
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { FREE_SHIPPING_LABEL } from '../config';
 
 export const Header = ({ currentPage, onNavigate }) => {
   const { cartCount, setIsCartOpen, wishlist } = useCart();
@@ -25,7 +26,7 @@ export const Header = ({ currentPage, onNavigate }) => {
       {/* Top Global Promo Bar */}
       <div className="bg-[#1E3F20] text-[#E8EDDF] text-[9.5px] font-['Geist_Mono'] py-2 px-4 tracking-wider flex items-center justify-center text-center border-b border-[#2D5A30]">
         <span className="font-bold text-[#84BD3A] mr-1.5">FREE SHIPPING</span>
-        OVER ₹1,499 · 30-DAY EASY TRIAL · DISPATCH: 24-48 HRS
+        OVER {FREE_SHIPPING_LABEL} · 30-DAY EASY TRIAL · DISPATCH: 24-48 HRS
       </div>
 
       {/* Main Navbar */}
@@ -221,7 +222,7 @@ export const Header = ({ currentPage, onNavigate }) => {
                 </div>
                 <div className="flex items-center gap-2">
                   <Truck size={14} className="text-[#84BD3A]" />
-                  <span>Free Express Shipping on ₹1,499+</span>
+                  <span>Free Express Shipping on {FREE_SHIPPING_LABEL}+</span>
                 </div>
               </div>
             </motion.div>

@@ -7,6 +7,7 @@ import {
   RefreshCw, Headphones, Truck, Banknote
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import DesktopHeader from '../components/DesktopHeader';
 
 const InstagramIcon = ({ size = 16, className = "" }) => (
   <svg 
@@ -388,127 +389,7 @@ export const DesktopHomePage = ({ onNavigate }) => {
   return (
     <div className="w-full bg-[#FFFFFF] text-[#111111] font-['Geist'] selection:bg-[#84BD3A] selection:text-[#1E3F20]">
       
-      {/* ========================================================================= */}
-      {/* 0. STICKY UTILITY BAR (Figma Node 19:7)                                    */}
-      {/* ========================================================================= */}
-      <div className="w-full bg-[#111111] text-white text-xs py-2.5 px-8 flex items-center justify-between z-50">
-        <div className="flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#84BD3A] animate-pulse" />
-          <span className="font-['Geist'] text-white/90">
-            Free shipping on all orders above <strong className="text-[#84BD3A]">₹1,999</strong>
-          </span>
-        </div>
-
-        <div className="flex items-center gap-6 text-white/80">
-          <button 
-            onClick={() => onNavigate('contact')}
-            className="flex items-center gap-1.5 hover:text-white transition cursor-pointer text-xs"
-          >
-            <MapPin size={13} className="text-[#84BD3A]" />
-            <span>Store Locator</span>
-          </button>
-          <div className="w-px h-3 bg-white/20" />
-          <button 
-            onClick={() => triggerToast('Account login opened')}
-            className="flex items-center gap-1.5 hover:text-white transition cursor-pointer text-xs"
-          >
-            <User size={13} className="text-[#84BD3A]" />
-            <span>My Account</span>
-          </button>
-        </div>
-      </div>
-
-      {/* ========================================================================= */}
-      {/* 1. MAIN HEADER (Figma Node 19:16)                                         */}
-      {/* ========================================================================= */}
-      <header className="sticky top-0 bg-white/95 backdrop-blur-md border-b border-gray-100 px-8 py-4 z-40 shadow-xs">
-        <div className="max-w-[1440px] mx-auto flex items-center justify-between">
-          
-          {/* Logo */}
-          <button 
-            onClick={() => onNavigate('home')}
-            className="flex items-center cursor-pointer group focus:outline-none py-1"
-            aria-label="MediFeet Home"
-          >
-            <img 
-              src="/assets/medifeet-brand-logo.png" 
-              alt="MediFeet" 
-              className="h-9 sm:h-10 w-auto object-contain transition-transform group-hover:scale-105 select-none"
-            />
-          </button>
-
-          {/* Navigation Links */}
-          <nav className="hidden md:flex items-center gap-8 text-sm font-['Outfit'] font-semibold">
-            <button 
-              onClick={() => onNavigate('shop')}
-              className="text-[#111111] hover:text-[#1E3F20] transition cursor-pointer"
-            >
-              Women
-            </button>
-            <button 
-              onClick={() => onNavigate('men')}
-              className="text-[#111111] hover:text-[#1E3F20] transition cursor-pointer"
-            >
-              Men
-            </button>
-            <button 
-              onClick={() => onNavigate('shop')}
-              className="text-[#1E3F20] font-bold relative cursor-pointer"
-            >
-              New Arrivals
-              <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-[#84BD3A] rounded-full" />
-            </button>
-            <button 
-              onClick={() => onNavigate('shop')}
-              className="text-[#111111] hover:text-[#1E3F20] transition cursor-pointer"
-            >
-              Sale
-            </button>
-          </nav>
-
-          {/* Header Utilities */}
-          <div className="flex items-center gap-4">
-            {/* Search Input */}
-            <div className="relative hidden sm:flex items-center bg-[#F4F6F2] rounded-full px-3.5 py-1.5 border border-transparent focus-within:border-[#84BD3A] transition">
-              <Search size={14} className="text-gray-400 mr-2 shrink-0" />
-              <input 
-                type="text" 
-                placeholder="Search shoes..." 
-                className="bg-transparent text-xs text-[#111111] placeholder-gray-400 focus:outline-none w-32 lg:w-44 font-['Geist']"
-              />
-            </div>
-
-            {/* Wishlist Icon */}
-            <button 
-              onClick={() => triggerToast(`Wishlist contains ${wishlist.length} item(s)`)}
-              className="relative p-2 rounded-full hover:bg-gray-100 transition cursor-pointer text-gray-700"
-              aria-label="Wishlist"
-            >
-              <Heart size={20} />
-              {wishlist.length > 0 && (
-                <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-[#84BD3A] text-[#1E3F20] font-['Geist_Mono'] font-bold text-[10px] flex items-center justify-center">
-                  {wishlist.length}
-                </span>
-              )}
-            </button>
-
-            {/* Shopping Bag Icon */}
-            <button 
-              onClick={() => setIsCartOpen(true)}
-              className="relative p-2 rounded-full hover:bg-gray-100 transition cursor-pointer text-gray-700"
-              aria-label="Cart"
-            >
-              <ShoppingBag size={20} />
-              {cartCount > 0 && (
-                <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-[#1E3F20] text-white font-['Geist_Mono'] font-bold text-[10px] flex items-center justify-center">
-                  {cartCount}
-                </span>
-              )}
-            </button>
-          </div>
-
-        </div>
-      </header>
+      <DesktopHeader currentPage="home" onNavigate={onNavigate} />
 
       {/* ========================================================================= */}
       {/* 2. HERO BANNER: BOBBY DEOL AMBASSADOR SUITE (Figma Node 19:44)             */}
@@ -765,6 +646,7 @@ export const DesktopHomePage = ({ onNavigate }) => {
                       <video
                         src={prevCard.video}
                         muted
+                        preload="metadata"
                         loop
                         playsInline
                         className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
@@ -941,6 +823,7 @@ export const DesktopHomePage = ({ onNavigate }) => {
                       <video
                         src={nextCard.video}
                         muted
+                        preload="metadata"
                         loop
                         playsInline
                         className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
@@ -987,6 +870,7 @@ export const DesktopHomePage = ({ onNavigate }) => {
                       <video
                         src={nextNextCard.video}
                         muted
+                        preload="metadata"
                         loop
                         playsInline
                         className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"

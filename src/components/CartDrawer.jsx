@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, ShieldCheck, Tag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { FREE_SHIPPING_THRESHOLD } from '../config';
 
 export const CartDrawer = ({ onNavigateToProduct }) => {
   const { isCartOpen, setIsCartOpen, cartItems, cartSubtotal, updateQuantity, removeFromCart } = useCart();
@@ -10,7 +11,7 @@ export const CartDrawer = ({ onNavigateToProduct }) => {
 
   if (!isCartOpen) return null;
 
-  const freeShippingThreshold = 1499;
+  const freeShippingThreshold = FREE_SHIPPING_THRESHOLD;
   const progressPercent = Math.min(100, (cartSubtotal / freeShippingThreshold) * 100);
   const remainingForFreeShipping = Math.max(0, freeShippingThreshold - cartSubtotal);
 

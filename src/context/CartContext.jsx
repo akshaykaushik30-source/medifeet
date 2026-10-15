@@ -2,23 +2,32 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const CartContext = createContext();
 
-export const CartProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 'cloudwalk-stone-beige',
-      title: 'CloudWalk Perfect Sandal',
-      color: 'Stone Beige',
-      size: 6,
-      price: 2499,
-      originalPrice: 3299,
-      image: '/assets/product-thumbnail.png',
-      quantity: 1,
-    }
-  ]);
+const loadSaved = (key) => {
+  try {
+    const saved = JSON.parse(localStorage.getItem(key));
+    return Array.isArray(saved) ? saved : [];
+  } catch {
+    return [];
+  }
+};
 
+const saveToStorage = (key, value) => {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // Storage can be unavailable (private mode, blocked cookies); the bag still works for this visit.
+  }
+};
+
+export const CartProvider = ({ children }) => {
+  const [cartItems, setCartItems] = useState(() => loadSaved('medifeet-cart'));
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [addedItemModal, setAddedItemModal] = useState(null); // for Figma "Added to cart" bottom sheet
-  const [wishlist, setWishlist] = useState(['cloudwalk-stone-beige']);
+  const [wishlist, setWishlist] = useState(() => loadSaved('medifeet-wishlist'));
+
+  // Keep the bag and wishlist across page reloads and visits.
+  useEffect(() => saveToStorage('medifeet-cart', cartItems), [cartItems]);
+  useEffect(() => saveToStorage('medifeet-wishlist', wishlist), [wishlist]);
 
   const addToCart = (product) => {
     setCartItems(prev => {
