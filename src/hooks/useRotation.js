@@ -15,5 +15,5 @@ export const useRotation = (count, intervalMs = 6000) => {
     return () => clearTimeout(timer);
   }, [index, paused, count, intervalMs]);
 
-  return { index, setIndex, setPaused };
+  return { index, setIndex, paused, setPaused };
 };

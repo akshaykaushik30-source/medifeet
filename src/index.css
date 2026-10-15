@@ -55,3 +55,9 @@
     linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent);
   mask-composite: intersect;
 }
+
+/* Hero progress bars: fill once over the slide duration. */
+@keyframes bar-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}

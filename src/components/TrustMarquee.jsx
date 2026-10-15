@@ -11,12 +11,12 @@ const PROMISES = [
 
 // Slim, continuously scrolling strip of store promises.
 export const TrustMarquee = () => (
-  <div className="w-full bg-[#14301A] text-white py-3.5 overflow-hidden select-none" aria-label="Store promises">
-    <ul className="animate-marquee gap-12">
+  <div className="w-full bg-[#F6F3EE] text-[#1A1A17] py-4 border-y border-[#1A1A17]/10 overflow-hidden select-none" aria-label="Store promises">
+    <ul className="animate-marquee gap-14">
       {[...PROMISES, ...PROMISES, ...PROMISES, ...PROMISES].map(({ icon: Icon, label }, i) => (
         <li key={i} className="flex items-center gap-2.5 shrink-0" aria-hidden={i >= PROMISES.length || undefined}>
-          <Icon size={15} className="text-[#A4D65E]" />
-          <span className="font-['Outfit'] font-medium text-[13px] tracking-wide whitespace-nowrap">{label}</span>
+          <Icon size={14} strokeWidth={1.5} className="text-[#1E3F20]" />
+          <span className="text-[13px] text-[#6B675F] whitespace-nowrap">{label}</span>
         </li>
       ))}
     </ul>

@@ -32,14 +32,14 @@ const ReelCard = ({ reel, onOpen, hidden }) => {
       aria-label={`Play ${reel.name}: ${reel.title}`}
       aria-hidden={hidden || undefined}
       tabIndex={hidden ? -1 : 0}
-      className="group relative w-[230px] sm:w-[270px] aspect-[9/16] shrink-0 rounded-3xl overflow-hidden bg-[#1A3520] ring-1 ring-white/10 hover:ring-2 hover:ring-[#A4D65E] focus-visible:ring-2 focus-visible:ring-[#A4D65E] outline-none shadow-xl transition hover:-translate-y-1 cursor-pointer text-left"
+      className="group relative w-[230px] sm:w-[270px] aspect-[9/16] shrink-0 rounded-3xl overflow-hidden bg-[#1A3520] outline-none focus-visible:ring-2 focus-visible:ring-[#1A1A17] transition hover:-translate-y-1 cursor-pointer text-left"
     >
       <img src={reel.image} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
       <video ref={videoRef} src={reel.video} muted loop playsInline preload="none" className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-300" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-black/25" />
       <span className="absolute top-4 left-4 bg-black/45 backdrop-blur-md text-white text-[11px] font-['Geist_Mono'] px-2.5 py-1 rounded-full">{reel.time}</span>
       <div className="absolute inset-x-0 bottom-0 p-5 space-y-1.5">
-        <p className="text-[11px] font-['Geist_Mono'] text-[#A4D65E]">{reel.handle}</p>
+        <p className="text-[11px] text-white/70">{reel.handle}</p>
         <p className="font-['Outfit'] font-bold text-base text-white leading-snug">{reel.name}</p>
         <p className="text-xs text-white/75 leading-relaxed line-clamp-2">{reel.title}</p>
       </div>
@@ -69,10 +69,10 @@ const ReelViewer = ({ reel, onClose }) => {
 export const CommunityReels = () => {
   const [open, setOpen] = useState(null);
   return (
-    <section className="bg-[#0F2414] text-white py-20 overflow-hidden">
+    <section className="bg-[#F6F3EE] py-28 sm:py-36 overflow-hidden">
       <div className="max-w-[1280px] mx-auto px-5 sm:px-8 mb-10">
-        <p className="font-['Geist_Mono'] text-xs font-bold uppercase tracking-[0.2em] text-[#A4D65E] mb-3">Real people, real comfort</p>
-        <h2 className="font-['Outfit'] font-bold text-4xl sm:text-5xl tracking-tight">Seen on feet.</h2>
+        <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-[#6B675F] mb-5">Real people, real comfort</p>
+        <h2 className="font-['Outfit'] font-medium text-4xl sm:text-5xl tracking-[-0.03em] text-[#1A1A17]">Seen on feet.</h2>
       </div>
       <div className="reel-strip overflow-hidden">
         <div className="reel-track gap-6 px-3 py-4">

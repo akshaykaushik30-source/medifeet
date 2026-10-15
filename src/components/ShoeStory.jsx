@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform, useMotionValueEvent, useReducedMotion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
@@ -42,17 +42,17 @@ const Chapter = ({ chapter, index, progress, onNavigate }) => {
 
   return (
     <motion.div style={{ opacity, y, pointerEvents }} className="absolute inset-0 flex flex-col justify-center">
-      <p className="font-['Geist_Mono'] text-xs font-bold uppercase tracking-[0.2em] text-[#2F6B2E] mb-3">{chapter.kicker}</p>
-      <h2 className="font-['Outfit'] font-bold text-[34px] sm:text-5xl leading-[1.05] tracking-tight text-[#14301A] [text-wrap:balance]">
+      <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-[#5F5B53] mb-4">{chapter.kicker}</p>
+      <h2 className="font-['Outfit'] font-medium text-[34px] sm:text-5xl leading-[1.05] tracking-[-0.03em] text-[#1A1A17] [text-wrap:balance]">
         {chapter.title}
       </h2>
-      <p className="mt-4 text-base sm:text-lg text-[#3D4A3F] leading-relaxed max-w-[34ch]">{chapter.text}</p>
+      <p className="mt-4 text-base sm:text-lg text-[#4A463F] leading-relaxed max-w-[34ch]">{chapter.text}</p>
       {chapter.cta && (
         <div className="mt-7 flex flex-wrap gap-3">
-          <button onClick={() => onNavigate('shop')} className="bg-[#14301A] hover:bg-[#1E3F20] text-white font-['Outfit'] font-semibold text-sm px-6 py-3 rounded-full inline-flex items-center gap-2 transition cursor-pointer">
-            Shop women <ArrowRight size={15} />
+          <button onClick={() => onNavigate('shop')} className="bg-[#1A1A17] hover:bg-[#1E3F20] text-white text-sm font-medium px-6 py-3 rounded-full inline-flex items-center gap-2 transition cursor-pointer">
+            Shop women
           </button>
-          <button onClick={() => onNavigate('men')} className="bg-white/70 hover:bg-white text-[#14301A] font-['Outfit'] font-semibold text-sm px-6 py-3 rounded-full inline-flex items-center gap-2 transition cursor-pointer">
+          <button onClick={() => onNavigate('men')} className="text-[#1A1A17] text-sm font-medium px-2 py-3 inline-flex items-center gap-1.5 cursor-pointer">
             Shop men <ArrowRight size={15} />
           </button>
         </div>
@@ -68,28 +68,20 @@ const LayerLabels = ({ progress }) => {
     <motion.ul style={{ opacity, x }} className="absolute inset-0 pointer-events-none hidden lg:block" aria-hidden="true">
       {LAYERS.map((layer) => (
         <li key={layer.label} className="absolute left-full flex items-center gap-3 -translate-y-1/2" style={{ top: `${layer.y * 100}%` }}>
-          <span className="w-14 h-px bg-[#14301A]/40" />
-          <span className="font-['Outfit'] font-semibold text-sm text-[#14301A] whitespace-nowrap">{layer.label}</span>
+          <span className="w-14 h-px bg-[#1A1A17]/35" />
+          <span className="text-sm text-[#1A1A17] whitespace-nowrap">{layer.label}</span>
         </li>
       ))}
     </motion.ul>
   );
 };
 
-const ProgressDots = ({ progress }) => {
-  const [active, setActive] = useState(0);
-  useMotionValueEvent(progress, 'change', (p) => {
-    const i = CHAPTERS.findIndex((c) => p >= c.range[0] && p < c.range[1]);
-    setActive(i === -1 ? CHAPTERS.length - 1 : i);
-  });
-  return (
-    <div className="absolute right-5 sm:right-8 top-1/2 -translate-y-1/2 flex flex-col gap-2.5" aria-hidden="true">
-      {CHAPTERS.map((c, i) => (
-        <span key={c.kicker} className={`w-1.5 rounded-full transition-all duration-300 ${i === active ? 'h-6 bg-[#14301A]' : 'h-1.5 bg-[#14301A]/25'}`} />
-      ))}
-    </div>
-  );
-};
+// A thin vertical line that fills as the story progresses.
+const ProgressDots = ({ progress }) => (
+  <div className="absolute right-5 sm:right-8 top-1/2 -translate-y-1/2 h-32 w-px bg-[#1A1A17]/15" aria-hidden="true">
+    <motion.div style={{ scaleY: progress }} className="w-full h-full bg-[#1A1A17] origin-top" />
+  </div>
+);
 
 // Apple-style scroll story: a pinned canvas draws the frame that matches how far
 // the visitor has scrolled through this tall section, while chapters fade in.
