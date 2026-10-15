@@ -134,9 +134,6 @@ export const DesktopHomePage = ({ onNavigate }) => {
   
   // Comfort Technology Interactive Video States
   const [selectedTechIdx, setSelectedTechIdx] = useState(0);
-  const [isTechVideoPlaying, setIsTechVideoPlaying] = useState(true);
-  const [isTechVideoMuted, setIsTechVideoMuted] = useState(true);
-  const techVideoRef = useRef(null);
 
   const [quickViewProduct, setQuickViewProduct] = useState(null);
   const [quickViewSize, setQuickViewSize] = useState(8);
@@ -670,7 +667,7 @@ export const DesktopHomePage = ({ onNavigate }) => {
             tag: 'HEEL & MIDSOLE SHOCK ABSORPTION',
             video: '/assets/video-cushioning.mp4',
             poster: '/assets/medifeet_home/img_37_192_181_visual_column.png',
-            badge: '☁️ Cloud Cushioning Tech',
+            badge: 'Cloud Cushioning',
             headline: 'Soft, responsive impact absorption with every step.',
             desc: 'Dual-density compressed sole absorbs 95% of strike shock and returns energy smoothly into your stride.',
             icon: Layers,
@@ -683,7 +680,7 @@ export const DesktopHomePage = ({ onNavigate }) => {
             tag: 'ANATOMICAL ARCH BRIDGE',
             video: '/assets/video-tech-arch-support.mp4',
             poster: '/assets/medifeet_home/img_37_192_181_visual_column.png',
-            badge: '🛡️ All-Day Support Tech',
+            badge: 'All-Day Support',
             headline: 'Balanced anatomical arch support aligns your entire body.',
             desc: 'Contoured orthopedic arch alignment cradles the foot, relieving plantar fascia tension on hard floors.',
             icon: ShieldCheck,
@@ -696,7 +693,7 @@ export const DesktopHomePage = ({ onNavigate }) => {
             tag: 'PLUSH MEMORY CONTOUR',
             video: '/assets/video-tech-foam.mp4',
             poster: '/assets/medifeet_home/img_37_192_181_visual_column.png',
-            badge: '✨ Adaptive Memory Foam',
+            badge: 'Adaptive Memory Foam',
             headline: 'Custom plush contouring that molds to your unique foot.',
             desc: 'High-rebound memory foam adapts to your unique pressure points for custom, zero-pressure everyday walking.',
             icon: Sparkles,
@@ -716,62 +713,17 @@ export const DesktopHomePage = ({ onNavigate }) => {
               {/* Left Column: Interactive Video Player matching Figma screenshot */}
               <div className="col-span-12 lg:col-span-5 relative">
                 
-                {/* Visual View Switcher (Walk vs Sole Tech) */}
-                <div className="flex items-center justify-between mb-3 px-1">
-                  <div className="flex items-center gap-1.5">
-                    <button
-                      onClick={() => setSelectedTechIdx(0)}
-                      className={`px-3 py-1.5 rounded-full text-[11px] font-['Geist_Mono'] font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                        selectedTechIdx === 0
-                          ? 'bg-[#1E3F20] text-white shadow-sm'
-                          : 'bg-white hover:bg-gray-100 text-[#5F6B62] border border-gray-200'
-                      }`}
-                    >
-                      <Footprints size={12} className={selectedTechIdx === 0 ? "text-[#84BD3A]" : "text-gray-400"} />
-                      <span>Everyday Walk</span>
-                    </button>
-
-                    <button
-                      onClick={() => setSelectedTechIdx(selectedTechIdx === 0 ? 1 : selectedTechIdx)}
-                      className={`px-3 py-1.5 rounded-full text-[11px] font-['Geist_Mono'] font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                        selectedTechIdx !== 0
-                          ? 'bg-[#1E3F20] text-[#84BD3A] shadow-sm'
-                          : 'bg-white hover:bg-gray-100 text-[#5F6B62] border border-gray-200'
-                      }`}
-                    >
-                      <Layers size={12} />
-                      <span>Sole Tech ({activeTech.title})</span>
-                    </button>
-                  </div>
-
-                  <span className="text-[10px] font-['Geist_Mono'] text-gray-400 hidden sm:inline-block">
-                    Hover cards to preview
-                  </span>
-                </div>
-
                 <div className="rounded-[28px] overflow-hidden aspect-[4/5] min-h-[500px] relative shadow-2xl border-4 border-white bg-black group">
-                  {/* HTML5 Video Player */}
-                  <video 
-                    ref={techVideoRef}
+                  <video
                     key={activeTech.video}
                     src={activeTech.video}
                     poster={activeTech.poster}
                     autoPlay
                     loop
-                    muted={isTechVideoMuted}
+                    muted
                     playsInline
-                    className="w-full h-full object-cover select-none cursor-pointer transition-opacity duration-300"
-                    onClick={() => {
-                      if (techVideoRef.current) {
-                        if (techVideoRef.current.paused) {
-                          techVideoRef.current.play().catch(() => {});
-                          setIsTechVideoPlaying(true);
-                        } else {
-                          techVideoRef.current.pause();
-                          setIsTechVideoPlaying(false);
-                        }
-                      }
-                    }}
+                    aria-hidden="true"
+                    className="w-full h-full object-cover select-none animate-[fadeIn_0.5s_ease]"
                   />
 
                   {/* Gradient Overlay */}
@@ -780,16 +732,9 @@ export const DesktopHomePage = ({ onNavigate }) => {
                     {/* Top Bar inside Video Card */}
                     <div className="flex items-center justify-between pointer-events-auto">
                       <div className="bg-white/95 backdrop-blur-md text-[#1E3F20] text-xs font-['Outfit'] font-bold px-4 py-2 rounded-full shadow-md flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-[#84BD3A] animate-pulse" />
+                        <span className="w-2 h-2 rounded-full bg-[#84BD3A]" />
                         <span>{activeTech.badge}</span>
                       </div>
-
-                      <VideoControls
-                        muted={isTechVideoMuted}
-                        onToggleMute={() => setIsTechVideoMuted(!isTechVideoMuted)}
-                        onExpand={() => openVideoModal(activeTech.video, `${activeTech.title} — MediFeet Comfort Technology`)}
-                        position="top-6 right-6"
-                      />
                     </div>
 
                     {/* Bottom Info Card matching user uploaded screenshot exactly */}
@@ -825,50 +770,36 @@ export const DesktopHomePage = ({ onNavigate }) => {
                   </p>
                 </div>
 
-                {/* The 3 Interactive Feature Cards from Screenshot */}
-                <div className="space-y-4">
+                {/* Feature list: hovering or tapping a feature shows it in the video */}
+                <div className="space-y-3" role="list">
                   {techCardList.map((feat) => {
                     const Icon = feat.icon;
                     const isActive = selectedTechIdx === feat.id;
                     return (
-                      <div 
+                      <button
+                        type="button"
+                        role="listitem"
                         key={feat.id}
                         onClick={() => setSelectedTechIdx(feat.id)}
                         onMouseEnter={() => setSelectedTechIdx(feat.id)}
-                        className={`rounded-2xl p-5 sm:p-6 transition-all duration-300 flex items-start gap-4 cursor-pointer select-none border ${
-                          isActive 
-                            ? 'bg-[#F2F8ED] border-[#84BD3A] shadow-md scale-[1.01]' 
-                            : 'bg-white border-[#E8EDE5] hover:border-[#84BD3A]/50 hover:bg-[#F9FAF8] shadow-xs'
+                        onFocus={() => setSelectedTechIdx(feat.id)}
+                        aria-current={isActive || undefined}
+                        className={`w-full text-left rounded-2xl p-5 sm:p-6 flex items-start gap-5 border transition-colors duration-300 cursor-pointer ${
+                          isActive
+                            ? 'bg-white border-[#84BD3A] shadow-[0_8px_30px_rgba(30,63,32,0.08)]'
+                            : 'bg-white/60 border-[#E8EDE5] hover:bg-white'
                         }`}
                       >
-                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 transition-colors ${
-                          isActive 
-                            ? 'bg-[#1E3F20] text-[#84BD3A] shadow-sm' 
-                            : 'bg-[#1E3F20] text-[#84BD3A]'
+                        <span className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-colors duration-300 ${
+                          isActive ? 'bg-[#1E3F20] text-[#84BD3A]' : 'bg-[#E8EFE3] text-[#1E3F20]'
                         }`}>
-                          <Icon size={24} strokeWidth={2.2} />
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between mb-1.5">
-                            <h4 className="font-['Outfit'] font-bold text-[17px] text-[#1E3F20] flex items-center gap-2">
-                              <span>{feat.cardTitle}</span>
-                              {isActive && (
-                                <span className="w-2 h-2 rounded-full bg-[#84BD3A] animate-pulse" />
-                              )}
-                            </h4>
-                            <span className={`text-[10px] font-['Geist_Mono'] font-bold px-2.5 py-0.5 rounded-full transition-colors ${
-                              isActive 
-                                ? 'bg-[#84BD3A] text-[#1E3F20]' 
-                                : 'text-gray-400 group-hover:text-[#1E3F20] bg-gray-50'
-                            }`}>
-                              {isActive ? 'PLAYING VIDEO ▶' : 'WATCH DEMO ▶'}
-                            </span>
-                          </div>
-                          <p className="text-[13px] sm:text-sm text-[#5F6B62] leading-relaxed font-['Geist']">
-                            {feat.cardDesc}
-                          </p>
-                        </div>
-                      </div>
+                          <Icon size={22} strokeWidth={2} />
+                        </span>
+                        <span className="flex-1 space-y-1.5">
+                          <span className="block font-['Outfit'] font-bold text-[17px] text-[#1E3F20]">{feat.cardTitle}</span>
+                          <span className="block text-sm text-[#5F6B62] leading-relaxed">{feat.cardDesc}</span>
+                        </span>
+                      </button>
                     );
                   })}
                 </div>
@@ -876,7 +807,7 @@ export const DesktopHomePage = ({ onNavigate }) => {
                 {/* Bottom Link matching screenshot */}
                 <div className="pt-2">
                   <button 
-                    onClick={() => onNavigate('shop')}
+                    onClick={() => onNavigate('about')}
                     className="inline-flex items-center gap-2 font-['Outfit'] font-bold text-sm text-[#1E3F20] hover:text-[#84BD3A] transition cursor-pointer group"
                   >
                     <span>Learn More About Our Technology</span>

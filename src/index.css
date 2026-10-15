@@ -40,3 +40,8 @@
   .reel-track { animation: none; }
   .reel-strip { overflow-x: auto; }
 }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
