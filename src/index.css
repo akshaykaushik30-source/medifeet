@@ -88,3 +88,15 @@ html.lenis, html.lenis body { height: auto; }
   mask-image: linear-gradient(to top, transparent, #000 18%), linear-gradient(to left, transparent, #000 16%);
   mask-composite: intersect;
 }
+
+/* Tech hotspots: a ring that grows and fades to invite a tap. */
+@keyframes hotspot-pulse {
+  0% { transform: scale(0.6); opacity: 0.7; }
+  100% { transform: scale(1.9); opacity: 0; }
+}
+.hotspot-pulse {
+  animation: hotspot-pulse 2.2s cubic-bezier(0.23, 1, 0.32, 1) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hotspot-pulse { animation: none; opacity: 0; }
+}

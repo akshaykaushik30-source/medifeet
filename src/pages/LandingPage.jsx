@@ -7,6 +7,8 @@ import { loadCatalog } from '../data/catalog';
 import { formatPrice } from '../config';
 import TrustMarquee from '../components/TrustMarquee';
 import ShoeStory from '../components/ShoeStory';
+import TechExplorer from '../components/tech/TechExplorer';
+import FeelTheDifference from '../components/tech/FeelTheDifference';
 import HeroProduct from '../components/HeroProduct';
 import ProductShelf from '../components/landing/ProductShelf';
 import CategoryTiles from '../components/landing/CategoryTiles';
@@ -322,6 +324,8 @@ export const LandingPage = ({ onNavigate }) => (
     <ProductShelf onNavigate={onNavigate} />
     <CategoryTiles onNavigate={onNavigate} />
     <ShoeStory onNavigate={onNavigate} />
+    <TechExplorer />
+    <FeelTheDifference />
     <Collections onNavigate={onNavigate} />
     <CommunityReels />
     <HelpSection />

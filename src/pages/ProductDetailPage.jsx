@@ -5,6 +5,8 @@ import { loadCatalog, productImage, discountPercent, CATEGORY_LABELS, GENDER_LAB
 import { FREE_SHIPPING_LABEL, formatPrice } from '../config';
 import ProductCard from '../components/ProductCard';
 import FeatureStrip from '../components/FeatureStrip';
+import TechExplorer from '../components/tech/TechExplorer';
+import FeelTheDifference from '../components/tech/FeelTheDifference';
 
 const SHOP_PAGE = { women: 'shop', men: 'men' };
 
@@ -303,6 +305,13 @@ export const ProductDetailPage = ({ productId, onNavigate }) => {
           </div>
         </div>
       </section>
+
+      <TechExplorer
+        eyebrow="Inside every MediFeet pair"
+        title="Comfort, decoded."
+        text="Every MediFeet style is built on the same five technologies. Tap a point on the sandal to see what each one does."
+      />
+      <FeelTheDifference className="bg-white" />
 
       {related.length > 0 && (
         <section className="bg-[#F5F7F2] py-14">

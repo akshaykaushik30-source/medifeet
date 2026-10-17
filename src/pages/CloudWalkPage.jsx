@@ -5,7 +5,9 @@ import { useCart } from '../context/CartContext';
 import { CLOUDWALK as P } from '../data/cloudwalk';
 import { formatPrice, FREE_SHIPPING_LABEL, supportLink } from '../config';
 import SizeChartModal from '../components/SizeChartModal';
-import { AutoVideo, Technologies, SoleLayers, Comparison, MotionFilms, Reviews, Guidance, SupportBand } from '../components/product/ProductStory';
+import TechExplorer from '../components/tech/TechExplorer';
+import FeelTheDifference from '../components/tech/FeelTheDifference';
+import { AutoVideo, SoleLayers, Comparison, MotionFilms, Reviews, Guidance, SupportBand } from '../components/product/ProductStory';
 import SectionHeading from '../components/landing/SectionHeading';
 
 const EASE = [0.22, 1, 0.36, 1];
@@ -316,8 +318,9 @@ export const CloudWalkPage = ({ onNavigate }) => {
         </div>
       </section>
 
-      <Technologies data={P.technologies} />
+      <TechExplorer eyebrow={P.technologies.eyebrow} title={P.technologies.title} text={P.technologies.text} />
       <SoleLayers data={P.layers} />
+      <FeelTheDifference className="bg-white" />
       <Comparison data={P.comparison} />
       <MotionFilms data={P.motion} />
       <Reviews data={P.reviews} />
