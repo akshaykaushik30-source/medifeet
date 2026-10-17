@@ -31,7 +31,7 @@ export const Header = ({ currentPage, onNavigate }) => {
       </div>
 
       {/* Main Navbar */}
-      <header className="sticky top-0 z-40 bg-[#F7F9F6]/95 backdrop-blur-md border-b border-[#E8EDDF] transition-all">
+      <header className="sticky top-0 z-40 bg-[#F7F9F6] border-b border-[#E8EDDF]">
         <div className="max-w-[1200px] mx-auto px-4 h-15 flex items-center justify-between">
           
           {/* Left: Mobile Menu Toggle & Desktop Nav Links */}

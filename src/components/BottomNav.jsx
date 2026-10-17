@@ -12,7 +12,7 @@ export const BottomNav = ({ currentPage, onNavigate }) => {
   ];
 
   return (
-    <div className="fixed bottom-0 inset-x-0 z-40 bg-[#F7F9F6]/95 backdrop-blur-md border-t border-[#E8EDDF] px-4 py-2 sm:hidden flex items-center justify-around shadow-lg">
+    <div className="fixed bottom-0 inset-x-0 z-40 bg-[#F7F9F6] border-t border-[#E8EDDF] px-4 py-2 sm:hidden flex items-center justify-around shadow-lg">
       {navItems.map((item) => {
         const Icon = item.icon;
         const isActive = currentPage === item.id;
