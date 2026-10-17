@@ -42,17 +42,17 @@ const Chapter = ({ chapter, index, progress, onNavigate }) => {
 
   return (
     <motion.div style={{ opacity, y, pointerEvents }} className="absolute inset-0 flex flex-col justify-center">
-      <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-[#5F5B53] mb-4">{chapter.kicker}</p>
-      <h2 className="font-['Outfit'] font-medium text-[34px] sm:text-5xl leading-[1.05] tracking-[-0.03em] text-[#1A1A17] [text-wrap:balance]">
+      <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-[#5C6B57] mb-4">{chapter.kicker}</p>
+      <h2 className="font-['Outfit'] font-medium text-[34px] sm:text-5xl leading-[1.05] tracking-[-0.03em] text-[#1E3F20] [text-wrap:balance]">
         {chapter.title}
       </h2>
-      <p className="mt-4 text-base sm:text-lg text-[#4A463F] leading-relaxed max-w-[34ch]">{chapter.text}</p>
+      <p className="mt-4 text-base sm:text-lg text-[#4A5D4E] leading-relaxed max-w-[34ch]">{chapter.text}</p>
       {chapter.cta && (
         <div className="mt-7 flex flex-wrap gap-3">
-          <button onClick={() => onNavigate('shop')} className="bg-[#1A1A17] hover:bg-[#1E3F20] text-white text-sm font-medium px-6 py-3 rounded-full inline-flex items-center gap-2 transition duration-150 active:scale-[0.97] cursor-pointer">
+          <button onClick={() => onNavigate('shop')} className="bg-[#1E3F20] hover:bg-[#285424] text-white text-sm font-medium px-6 py-3 rounded-full inline-flex items-center gap-2 transition duration-150 active:scale-[0.97] cursor-pointer">
             Shop women
           </button>
-          <button onClick={() => onNavigate('men')} className="text-[#1A1A17] text-sm font-medium px-2 py-3 inline-flex items-center gap-1.5 cursor-pointer">
+          <button onClick={() => onNavigate('men')} className="text-[#1E3F20] text-sm font-medium px-2 py-3 inline-flex items-center gap-1.5 cursor-pointer">
             Shop men <ArrowRight size={15} />
           </button>
         </div>
@@ -68,8 +68,8 @@ const LayerLabels = ({ progress }) => {
     <motion.ul style={{ opacity, x }} className="absolute inset-0 pointer-events-none hidden lg:block" aria-hidden="true">
       {LAYERS.map((layer) => (
         <li key={layer.label} className="absolute left-full flex items-center gap-3 -translate-y-1/2" style={{ top: `${layer.y * 100}%` }}>
-          <span className="w-14 h-px bg-[#1A1A17]/35" />
-          <span className="text-sm text-[#1A1A17] whitespace-nowrap">{layer.label}</span>
+          <span className="w-14 h-px bg-[#1E3F20]/35" />
+          <span className="text-sm text-[#1E3F20] whitespace-nowrap">{layer.label}</span>
         </li>
       ))}
     </motion.ul>
@@ -78,8 +78,8 @@ const LayerLabels = ({ progress }) => {
 
 // A thin vertical line that fills as the story progresses.
 const ProgressDots = ({ progress }) => (
-  <div className="absolute right-5 sm:right-8 top-1/2 -translate-y-1/2 h-32 w-px bg-[#1A1A17]/15" aria-hidden="true">
-    <motion.div style={{ scaleY: progress }} className="w-full h-full bg-[#1A1A17] origin-top" />
+  <div className="absolute right-5 sm:right-8 top-1/2 -translate-y-1/2 h-32 w-px bg-[#1E3F20]/15" aria-hidden="true">
+    <motion.div style={{ scaleY: progress }} className="w-full h-full bg-[#1E3F20] origin-top" />
   </div>
 );
 
@@ -161,9 +161,9 @@ export const ShoeStory = ({ onNavigate }) => {
           <div className="space-y-8">
             {CHAPTERS.map((c) => (
               <div key={c.kicker}>
-                <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-[#5F5B53] mb-2">{c.kicker}</p>
-                <h3 className="font-['Outfit'] font-medium text-2xl tracking-[-0.02em] text-[#1A1A17]">{c.title}</h3>
-                <p className="text-[#4A463F] mt-1 leading-relaxed">{c.text}</p>
+                <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-[#5C6B57] mb-2">{c.kicker}</p>
+                <h3 className="font-['Outfit'] font-medium text-2xl tracking-[-0.02em] text-[#1E3F20]">{c.title}</h3>
+                <p className="text-[#4A5D4E] mt-1 leading-relaxed">{c.text}</p>
               </div>
             ))}
           </div>

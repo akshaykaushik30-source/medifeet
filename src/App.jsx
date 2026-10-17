@@ -80,12 +80,13 @@ const MainAppContent = () => {
   }, []);
 
   // A catalogue product gets its own page; plain #product still shows the CloudWalk showcase.
+  // #shop/<category> and #men/<category> open a collection filtered to that category.
   const SharedPage = SHARED_PAGES[currentPage];
   let sharedPage = SharedPage && <SharedPage onNavigate={handleNavigate} />;
   if (currentPage === 'product' && productId) {
     sharedPage = <ProductDetailPage key={productId} productId={productId} onNavigate={handleNavigate} />;
   } else if (currentPage === 'shop' || currentPage === 'men') {
-    sharedPage = <CollectionPage key={currentPage} gender={currentPage === 'men' ? 'men' : 'women'} onNavigate={handleNavigate} />;
+    sharedPage = <CollectionPage key={route} gender={currentPage === 'men' ? 'men' : 'women'} initialCategory={productId} onNavigate={handleNavigate} />;
   }
 
   return (

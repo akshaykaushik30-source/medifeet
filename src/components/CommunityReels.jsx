@@ -32,7 +32,7 @@ const ReelCard = ({ reel, onOpen, hidden }) => {
       aria-label={`Play ${reel.name}: ${reel.title}`}
       aria-hidden={hidden || undefined}
       tabIndex={hidden ? -1 : 0}
-      className="group relative w-[230px] sm:w-[270px] aspect-[9/16] shrink-0 rounded-3xl overflow-hidden bg-[#1A3520] outline-none focus-visible:ring-2 focus-visible:ring-[#1A1A17] transition hover:-translate-y-1 cursor-pointer text-left"
+      className="group relative w-[230px] sm:w-[270px] aspect-[9/16] shrink-0 rounded-3xl overflow-hidden bg-[#1A3520] outline-none focus-visible:ring-2 focus-visible:ring-[#1E3F20] transition hover:-translate-y-1 cursor-pointer text-left"
     >
       <img src={reel.image} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
       <video ref={videoRef} src={reel.video} muted loop playsInline preload="none" className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-300" />
@@ -69,10 +69,10 @@ const ReelViewer = ({ reel, onClose }) => {
 export const CommunityReels = () => {
   const [open, setOpen] = useState(null);
   return (
-    <section className="bg-[#F6F3EE] py-28 sm:py-36 overflow-hidden">
+    <section className="bg-[#F4F6F2] py-28 sm:py-36 overflow-hidden">
       <div className="max-w-[1280px] mx-auto px-5 sm:px-8 mb-10">
-        <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-[#6B675F] mb-5">Real people, real comfort</p>
-        <h2 className="font-['Outfit'] font-medium text-4xl sm:text-5xl tracking-[-0.03em] text-[#1A1A17]">Seen on feet.</h2>
+        <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-[#667360] mb-5">Real people, real comfort</p>
+        <h2 className="font-['Outfit'] font-medium text-4xl sm:text-5xl tracking-[-0.03em] text-[#1E3F20]">Seen on feet.</h2>
       </div>
       <div className="reel-strip overflow-hidden">
         <div className="reel-track gap-6 px-3 py-4">

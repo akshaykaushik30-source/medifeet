@@ -1,15 +1,15 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion } from 'framer-motion';
-import { ArrowRight, ArrowUpRight, Heart } from 'lucide-react';
-import { useCart } from '../context/CartContext';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { useLayeredDepth } from '../hooks/useLayeredDepth';
-import { loadCatalog, productImage, discountPercent, productRoute, CATEGORY_LABELS } from '../data/catalog';
+import { loadCatalog, CATEGORY_LABELS } from '../data/catalog';
 import HeroProduct from '../components/HeroProduct';
+import ShopTile from '../components/ShopTile';
 import { formatPrice } from '../config';
 
 const EASE = [0.22, 1, 0.36, 1];
-const INK = 'text-[#1A1A17]';
-const MUTED = 'text-[#6B675F]';
+const INK = 'text-[#1E3F20]';
+const MUTED = 'text-[#667360]';
 const PAGE_SIZE = 12;
 
 const COLLECTIONS = {
@@ -46,8 +46,8 @@ const CollectionHero = ({ c, stats, onPickCategory }) => {
       <div className="relative h-[600px] sm:h-[700px] lg:h-[calc(100vh-116px)] lg:min-h-[660px] lg:max-h-[960px]">
         {/* Back: the collection name */}
         <motion.div style={style('wordScroll')} className="absolute inset-x-0 top-[24%] sm:top-[26%] lg:top-[20%] flex justify-center select-none pointer-events-none">
-          <motion.div style={style('word')} className="relative text-[#24241F]">
-            <span className="absolute -top-[0.9em] left-[0.06em] font-['Outfit'] font-light uppercase tracking-[0.32em] text-[13px] sm:text-xl lg:text-2xl text-[#6B675F]">
+          <motion.div style={style('word')} className="relative text-[#1E3F20]">
+            <span className="absolute -top-[0.9em] left-[0.06em] font-['Outfit'] font-light uppercase tracking-[0.32em] text-[13px] sm:text-xl lg:text-2xl text-[#667360]">
               {c.eyebrow}
             </span>
             <h1
@@ -71,7 +71,7 @@ const CollectionHero = ({ c, stats, onPickCategory }) => {
               </span>
             </h1>
             {stats && (
-              <span className="hidden sm:block absolute -top-[0.9em] right-[0.06em] font-['Outfit'] font-light text-xl lg:text-2xl text-[#6B675F]">
+              <span className="hidden sm:block absolute -top-[0.9em] right-[0.06em] font-['Outfit'] font-light text-xl lg:text-2xl text-[#667360]">
                 {stats.total} styles · from {formatPrice(stats.from)}
               </span>
             )}
@@ -104,9 +104,9 @@ const CollectionHero = ({ c, stats, onPickCategory }) => {
               aria-label={`Show ${c.product.label}`}
             >
               <HeroProduct src={c.product.image} rotate={reduceMotion ? undefined : productRotate} />
-              <span className="mt-1 ml-[8%] inline-flex items-center gap-2 whitespace-nowrap bg-white/85 backdrop-blur rounded-full px-4 py-2 text-xs sm:text-sm text-[#1A1A17] shadow-[0_4px_20px_rgba(0,0,0,0.06)]">
+              <span className="mt-1 ml-[8%] inline-flex items-center gap-2 whitespace-nowrap bg-white/85 backdrop-blur rounded-full px-4 py-2 text-xs sm:text-sm text-[#1E3F20] shadow-[0_4px_20px_rgba(0,0,0,0.06)]">
                 <span className="font-medium">{c.product.label}</span>
-                {productStats && <span className="text-[#6B675F]">{productStats.count} styles</span>}
+                {productStats && <span className="text-[#667360]">{productStats.count} styles</span>}
                 <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </span>
             </motion.button>
@@ -122,7 +122,7 @@ const CollectionHero = ({ c, stats, onPickCategory }) => {
         >
           <p className={`font-['Outfit'] font-medium text-2xl tracking-tight ${INK}`}>{c.title}</p>
           <p className={`mt-2 text-[15px] leading-relaxed ${MUTED}`}>{c.text}</p>
-          <a href={`#${c.word === 'men' ? 'men' : 'shop'}`} onClick={(e) => { e.preventDefault(); document.getElementById('collection-grid')?.scrollIntoView({ behavior: 'smooth' }); }} className={`mt-5 inline-flex items-center gap-1.5 text-sm font-medium ${INK} border-b border-[#1A1A17]/30 hover:border-[#1A1A17] pb-0.5`}>
+          <a href={`#${c.word === 'men' ? 'men' : 'shop'}`} onClick={(e) => { e.preventDefault(); document.getElementById('collection-grid')?.scrollIntoView({ behavior: 'smooth' }); }} className={`mt-5 inline-flex items-center gap-1.5 text-sm font-medium ${INK} border-b border-[#1E3F20]/30 hover:border-[#1E3F20] pb-0.5`}>
             Browse all styles <ArrowRight size={14} />
           </a>
         </motion.div>
@@ -141,7 +141,7 @@ const CollectionHero = ({ c, stats, onPickCategory }) => {
 // Category bar: large words with counts and a gliding underline.
 // ---------------------------------------------------------------------------
 const CategoryBar = ({ categories, active, onPick, total }) => (
-  <div className="sticky top-[61px] md:top-[80px] z-20 bg-white/85 backdrop-blur-xl border-b border-[#1A1A17]/8">
+  <div className="sticky top-[61px] md:top-[80px] z-20 bg-white/85 backdrop-blur-xl border-b border-[#1E3F20]/8">
     <ul className="max-w-[1400px] mx-auto px-5 sm:px-10 flex gap-7 sm:gap-10 overflow-x-auto" role="tablist">
       {[{ key: 'all', label: 'All', count: total }, ...categories].map((cat) => {
         const isActive = active === cat.key;
@@ -151,78 +151,18 @@ const CategoryBar = ({ categories, active, onPick, total }) => (
               role="tab"
               aria-selected={isActive}
               onClick={() => onPick(cat.key)}
-              className={`py-5 font-['Outfit'] text-lg sm:text-xl tracking-tight transition-colors cursor-pointer ${isActive ? INK : `${MUTED} hover:text-[#1A1A17]`}`}
+              className={`py-5 font-['Outfit'] text-lg sm:text-xl tracking-tight transition-colors cursor-pointer ${isActive ? INK : `${MUTED} hover:text-[#1E3F20]`}`}
             >
               {cat.label}
               <sup className="ml-1 text-[11px] tabular-nums">{cat.count}</sup>
             </button>
-            {isActive && <motion.span layoutId="category-underline" className="absolute left-0 right-0 bottom-0 h-[2px] bg-[#1A1A17]" transition={{ type: 'spring', duration: 0.5, bounce: 0 }} />}
+            {isActive && <motion.span layoutId="category-underline" className="absolute left-0 right-0 bottom-0 h-[2px] bg-[#1E3F20]" transition={{ type: 'spring', duration: 0.5, bounce: 0 }} />}
           </li>
         );
       })}
     </ul>
   </div>
 );
-
-// ---------------------------------------------------------------------------
-// Product card: borderless, second photo on hover, quiet fallback if a photo
-// can't load (e.g. while images are served from Shopify's CDN).
-// ---------------------------------------------------------------------------
-const ProductTile = ({ product, onNavigate, index }) => {
-  const { wishlist, toggleWishlist } = useCart();
-  const [failed, setFailed] = useState(false);
-  const saved = wishlist.includes(product.id);
-  const off = discountPercent(product);
-  const second = product.images[1];
-
-  return (
-    <motion.article
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.8, ease: EASE, delay: (index % 4) * 0.06 }}
-      className="group"
-    >
-      <div className="relative aspect-[4/5] rounded-[20px] overflow-hidden bg-[#F3F1EC]">
-        <button onClick={() => onNavigate(productRoute(product))} className="absolute inset-0 cursor-pointer" aria-label={`View ${product.name}`}>
-          {failed ? (
-            <img src="/assets/medifeet-brand-logo.png" alt="" className="absolute inset-0 m-auto w-24 opacity-20 grayscale" />
-          ) : (
-            <>
-              <img
-                src={productImage(product.images[0], 700)}
-                alt={product.name}
-                loading="lazy"
-                onError={() => setFailed(true)}
-                className={`absolute inset-0 w-full h-full object-contain p-6 transition-[opacity,transform] duration-300 ease-out group-hover:scale-[1.03] ${second ? 'group-hover:opacity-0' : ''}`}
-              />
-              {second && (
-                <img src={productImage(second, 700)} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-contain p-6 opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100" />
-              )}
-            </>
-          )}
-        </button>
-        {off > 0 && <span className="absolute top-4 left-4 text-[11px] font-medium bg-white/90 text-[#1A1A17] px-2.5 py-1 rounded-full">−{off}%</span>}
-        <button
-          onClick={() => toggleWishlist(product.id)}
-          aria-label={saved ? `Remove ${product.name} from wishlist` : `Save ${product.name}`}
-          aria-pressed={saved}
-          className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover:opacity-100 focus-visible:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity active:scale-[0.94] cursor-pointer"
-        >
-          <Heart size={16} className={saved ? 'fill-[#1A1A17] text-[#1A1A17]' : 'text-[#1A1A17]'} />
-        </button>
-      </div>
-      <button onClick={() => onNavigate(productRoute(product))} className="mt-4 w-full text-left cursor-pointer">
-        <span className={`block text-[15px] leading-snug line-clamp-2 ${INK}`}>{product.name}</span>
-        <span className="mt-1.5 flex items-baseline gap-2">
-          <span className={`text-[15px] font-medium tabular-nums ${INK}`}>{formatPrice(product.price)}</span>
-          {off > 0 && <span className={`text-xs line-through tabular-nums ${MUTED}`}>{formatPrice(product.compareAtPrice)}</span>}
-          {product.colors.length > 1 && <span className={`ml-auto text-xs ${MUTED}`}>{product.colors.length} colours</span>}
-        </span>
-      </button>
-    </motion.article>
-  );
-};
 
 // Closing banner pointing to the other collection, drifting with parallax.
 const OtherCollection = ({ other, onNavigate }) => {
@@ -247,10 +187,10 @@ const OtherCollection = ({ other, onNavigate }) => {
 };
 
 // Women's or men's collection page.
-export const CollectionPage = ({ gender = 'women', onNavigate }) => {
+export const CollectionPage = ({ gender = 'women', initialCategory, onNavigate }) => {
   const c = COLLECTIONS[gender];
   const [catalog, setCatalog] = useState(null);
-  const [category, setCategory] = useState('all');
+  const [category, setCategory] = useState(CATEGORY_LABELS[initialCategory] ? initialCategory : 'all');
   const [sort, setSort] = useState('featured');
   const [shown, setShown] = useState(PAGE_SIZE);
 
@@ -261,6 +201,14 @@ export const CollectionPage = ({ gender = 'women', onNavigate }) => {
       alive = false;
     };
   }, [gender]);
+
+  // Arriving from a category link (e.g. #shop/loafers): go straight to the grid.
+  const jumped = useRef(false);
+  useEffect(() => {
+    if (!catalog || jumped.current || !CATEGORY_LABELS[initialCategory]) return;
+    jumped.current = true;
+    requestAnimationFrame(() => document.getElementById('collection-grid')?.scrollIntoView({ behavior: 'smooth' }));
+  }, [catalog, initialCategory]);
 
   const stats = useMemo(() => {
     if (!catalog) return null;
@@ -316,7 +264,7 @@ export const CollectionPage = ({ gender = 'women', onNavigate }) => {
 
         {!catalog ? (
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-5 gap-y-12">
-            {Array.from({ length: 8 }, (_, i) => <div key={i} className="aspect-[4/5] rounded-[20px] bg-[#F3F1EC] animate-pulse" />)}
+            {Array.from({ length: 8 }, (_, i) => <div key={i} className="aspect-[4/5] rounded-[20px] bg-[#F1F4EC] animate-pulse" />)}
           </div>
         ) : (
           <AnimatePresence mode="wait">
@@ -328,7 +276,7 @@ export const CollectionPage = ({ gender = 'women', onNavigate }) => {
               transition={{ duration: 0.25 }}
               className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 sm:gap-x-6 gap-y-12"
             >
-              {list.slice(0, shown).map((p, i) => <ProductTile key={p.id} product={p} index={i} onNavigate={onNavigate} />)}
+              {list.slice(0, shown).map((p, i) => <ShopTile key={p.id} product={p} index={i} onNavigate={onNavigate} />)}
             </motion.div>
           </AnimatePresence>
         )}
@@ -338,7 +286,7 @@ export const CollectionPage = ({ gender = 'women', onNavigate }) => {
             <p className={`text-sm ${MUTED}`}>Showing {Math.min(shown, list.length)} of {list.length}</p>
             <button
               onClick={() => setShown((n) => n + PAGE_SIZE)}
-              className="border border-[#1A1A17] text-[#1A1A17] hover:bg-[#1A1A17] hover:text-white text-sm font-medium px-8 py-3.5 rounded-full transition-[color,background-color,transform] duration-150 active:scale-[0.97] cursor-pointer"
+              className="border border-[#1E3F20] text-[#1E3F20] hover:bg-[#1E3F20] hover:text-white text-sm font-medium px-8 py-3.5 rounded-full transition-[color,background-color,transform] duration-150 active:scale-[0.97] cursor-pointer"
             >
               Show more
             </button>

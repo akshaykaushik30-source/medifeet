@@ -38,7 +38,7 @@ export const DesktopHeader = ({ currentPage, onNavigate }) => {
   return (
     <>
       {/* Utility bar (Figma Node 19:7) */}
-      <div className="w-full bg-[#111111] text-white text-xs py-2.5 px-8 flex items-center justify-between z-50 select-none">
+      <div className="w-full bg-[#1E3F20] text-white text-xs py-2.5 px-8 flex items-center justify-between z-50 select-none">
         <div className="flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-[#84BD3A]" />
           <span className="font-['Geist'] text-white/90">
