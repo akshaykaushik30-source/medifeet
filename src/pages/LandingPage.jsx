@@ -276,7 +276,7 @@ const Parallax = ({ src, alt = '', speed = 60, className = '' }) => {
 };
 
 const COLLECTIONS = [
-  { gender: 'women', title: 'Women', page: 'shop', image: '/assets/medifeet_home/img_51_192_325_story_card.png' },
+  { gender: 'women', title: 'Women', page: 'shop', image: '/assets/collection-women-shilpa.webp' },
   { gender: 'men', title: 'Men', page: 'men', image: '/assets/desk_main_image_d227b7.png' },
 ];
 

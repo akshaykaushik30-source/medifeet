@@ -18,8 +18,10 @@ const COLLECTIONS = {
     eyebrow: 'The collection',
     title: 'Made to move with her.',
     text: 'Slippers, sandals, loafers and heels with arch support and cushioning built in.',
-    figure: '/assets/model-women-walk-cutout.webp',
-    product: { image: '/assets/hero-shoe-women-sandal.webp', label: "Women's sandals", category: 'sandals' },
+    figure: '/assets/ambassador-shilpa-shetty-full-cutout.webp',
+    // Full-length photo: keep her shoes in view.
+    fullBody: true,
+    product: { image: '/assets/hero-shoe-women-loafer.webp', label: "Women's loafers", category: 'loafers' },
     other: { page: 'men', label: "Shop men's", image: '/assets/desk_main_image_d227b7.png' },
   },
   men: {
@@ -87,7 +89,7 @@ const CollectionHero = ({ c, stats, onPickCategory }) => {
               initial={reduceMotion ? { opacity: 0 } : { opacity: 0, x: 40, filter: 'blur(12px)' }}
               animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
               transition={{ duration: 1.2, ease: EASE, delay: 0.3 }}
-              className="h-full w-auto max-w-none hero-fade-bottom"
+              className={`h-full w-auto max-w-none ${c.fullBody ? 'pb-[2%]' : 'hero-fade-bottom'}`}
             />
           </motion.div>
         </motion.div>
