@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform, useReducedMotion, useMotionValue, useSpring } from 'framer-motion';
+import { motion, AnimatePresence, useInView, useScroll, useTransform, useReducedMotion, useMotionValue, useSpring } from 'framer-motion';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { AMBASSADORS } from '../data/ambassadors';
 import { useRotation } from '../hooks/useRotation';
@@ -10,6 +10,8 @@ import ShoeStory from '../components/ShoeStory';
 import TechExplorer from '../components/tech/TechExplorer';
 import FeelTheDifference from '../components/tech/FeelTheDifference';
 import HeroProduct from '../components/HeroProduct';
+import Forming from '../components/motion/Forming';
+import LogoBuild from '../components/motion/LogoBuild';
 import ProductShelf from '../components/landing/ProductShelf';
 import CategoryTiles from '../components/landing/CategoryTiles';
 import HelpSection from '../components/landing/HelpSection';
@@ -19,7 +21,7 @@ import CommunityReels from '../components/CommunityReels';
 const INK = 'text-[#1E3F20]';
 const MUTED = 'text-[#667360]';
 const EASE = [0.22, 1, 0.36, 1];
-const SLIDE_MS = 7500;
+const SLIDE_MS = 5500;
 
 const Eyebrow = ({ children, className = '' }) => (
   <p className={`text-[11px] font-medium uppercase tracking-[0.28em] ${MUTED} ${className}`}>{children}</p>
@@ -63,6 +65,21 @@ const Hero = ({ onNavigate }) => {
   const reduceMotion = useReducedMotion();
   const a = AMBASSADORS[index];
 
+  // Slide on its own while the hero is on screen; pause when it scrolls away
+  // or the tab is hidden, and start again from the first slide on return.
+  const inView = useInView(sectionRef, { amount: 0.35 });
+  useEffect(() => {
+    const sync = () => setPaused(!inView || document.hidden);
+    sync();
+    document.addEventListener('visibilitychange', sync);
+    return () => document.removeEventListener('visibilitychange', sync);
+  }, [inView, setPaused]);
+  const wasInView = useRef(true);
+  useEffect(() => {
+    if (inView && !wasInView.current) setIndex(0);
+    wasInView.current = inView;
+  }, [inView, setIndex]);
+
   // Pointer depth: each layer follows the pointer by a different amount.
   const px = useMotionValue(0);
   const py = useMotionValue(0);
@@ -98,9 +115,7 @@ const Hero = ({ onNavigate }) => {
     <section
       ref={sectionRef}
       onPointerMove={onPointerMove}
-      onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => {
-        setPaused(false);
         px.set(0);
         py.set(0);
       }}
@@ -252,8 +267,10 @@ const Parallax = ({ src, alt = '', speed = 60, className = '' }) => {
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
   const y = useTransform(scrollYProgress, [0, 1], reduceMotion ? [0, 0] : [-speed, speed]);
   return (
-    <div ref={ref} className={`overflow-hidden bg-[#E3EAD9] ${className}`}>
-      <motion.img src={src} alt={alt} loading="lazy" style={{ y, scale: 1.18 }} className="w-full h-full object-cover" />
+    <div ref={ref} className={`relative overflow-hidden bg-[#E3EAD9] ${className}`}>
+      <Forming tint="#E3EAD9" ghost={src} ghostClassName="inset-0 w-full h-full object-cover">
+        <motion.img src={src} alt={alt} loading="lazy" style={{ y, scale: 1.18 }} className="w-full h-full object-cover" />
+      </Forming>
     </div>
   );
 };
@@ -315,6 +332,31 @@ const Collections = ({ onNavigate }) => {
   );
 };
 
+// A pause between the shop and the story: the logo assembles itself.
+const BrandMoment = () => (
+  <section className="bg-white pt-8 pb-24 sm:pb-32 px-5 text-center" aria-label="MediFeet">
+    <LogoBuild className="mx-auto w-[min(70vw,440px)]" />
+    <motion.p
+      initial={{ opacity: 0, y: 14 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.8 }}
+      transition={{ duration: 0.8, ease: EASE, delay: 1.7 }}
+      className="mt-10 font-['Outfit'] font-medium text-3xl sm:text-5xl tracking-[-0.035em] text-[#1E3F20]"
+    >
+      Built from the sole up.
+    </motion.p>
+    <motion.p
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, amount: 0.8 }}
+      transition={{ duration: 0.8, delay: 2.1 }}
+      className="mt-3 text-sm text-[#667360]"
+    >
+      Scroll to see inside a pair
+    </motion.p>
+  </section>
+);
+
 // Hero, then products first: the shelf and categories, the comfort story,
 // the two collections, the community, and answers to common questions.
 export const LandingPage = ({ onNavigate }) => (
@@ -323,6 +365,7 @@ export const LandingPage = ({ onNavigate }) => (
     <TrustMarquee />
     <ProductShelf onNavigate={onNavigate} />
     <CategoryTiles onNavigate={onNavigate} />
+    <BrandMoment />
     <ShoeStory onNavigate={onNavigate} />
     <TechExplorer />
     <FeelTheDifference />

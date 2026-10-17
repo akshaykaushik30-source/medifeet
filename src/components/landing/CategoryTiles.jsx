@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowUpRight, ArrowRight } from 'lucide-react';
 import { loadCatalog } from '../../data/catalog';
 import SectionHeading from './SectionHeading';
+import Forming from '../motion/Forming';
 
 const EASE = [0.22, 1, 0.36, 1];
 
@@ -43,12 +44,14 @@ const Tile = ({ tile, count, onClick, index }) => (
     style={{ background: tile.tint }}
     aria-label={`Shop ${tile.name}${count ? `, ${count} styles` : ''}`}
   >
-    <img
-      src={tile.image}
-      alt=""
-      loading="lazy"
-      className="absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2 w-[78%] drop-shadow-[0_18px_18px_rgba(30,63,32,0.14)] transition-transform duration-500 ease-out group-hover:-translate-y-[56%] group-hover:-rotate-[4deg] group-hover:scale-[1.04]"
-    />
+    <Forming tint={tile.tint} delay={index * 0.12} ghost={tile.image} ghostClassName="left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2 w-[78%]">
+      <img
+        src={tile.image}
+        alt=""
+        loading="lazy"
+        className="absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2 w-[78%] drop-shadow-[0_18px_18px_rgba(30,63,32,0.14)] transition-transform duration-500 ease-out group-hover:-translate-y-[56%] group-hover:-rotate-[4deg] group-hover:scale-[1.04]"
+      />
+    </Forming>
     <span className="absolute left-4 right-4 bottom-4 sm:left-5 sm:right-5 sm:bottom-5 flex items-end justify-between gap-3">
       <span>
         <span className="block font-['Outfit'] text-[17px] leading-tight sm:text-2xl tracking-[-0.02em] text-[#1E3F20]">{tile.name}</span>

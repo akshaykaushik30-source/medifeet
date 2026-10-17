@@ -5,6 +5,7 @@ import { useCart } from '../context/CartContext';
 import { productImage, discountPercent, productRoute } from '../data/catalog';
 import { formatPrice } from '../config';
 import { fallbackPhoto } from '../data/fallbacks';
+import Forming from './motion/Forming';
 
 const EASE = [0.22, 1, 0.36, 1];
 
@@ -66,6 +67,12 @@ export const ShopTile = ({ product, onNavigate, index = 0, fallback = fallbackPh
     >
       <div className="relative aspect-[4/5] rounded-[20px] overflow-hidden bg-[#F1F4EC]">
         <button onClick={open} className="absolute inset-0 cursor-pointer" aria-label={`View ${product.name}`}>
+          <Forming
+            tint="#F1F4EC"
+            delay={(index % 4) * 0.12}
+            ghost={failed ? fallback : productImage(mainImage, 400)}
+            ghostClassName={failed ? 'inset-0 w-full h-full object-contain p-8' : 'inset-0 w-full h-full object-contain p-6'}
+          >
           {failed ? (
             fallback ? (
               <img src={fallback} alt="" className="absolute inset-0 w-full h-full object-contain p-8 transition-transform duration-300 ease-out group-hover:scale-[1.03]" />
@@ -87,6 +94,7 @@ export const ShopTile = ({ product, onNavigate, index = 0, fallback = fallbackPh
               )}
             </>
           )}
+          </Forming>
         </button>
 
         {off > 0 && <span className="absolute top-4 left-4 text-[11px] font-semibold bg-[#E8F3D6] text-[#1E3F20] px-2.5 py-1 rounded-full pointer-events-none">−{off}%</span>}
